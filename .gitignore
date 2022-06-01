@@ -1,0 +1,9 @@
+.idea
+/target
+*.iml
+/db
+/TTimpex1/target
+/TTimpex2/target
+/TTimpex2/mvnw
+/TTimpex2/mvnw.*
+/TTimpex2/.mvn
