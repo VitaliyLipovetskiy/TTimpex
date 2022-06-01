@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: ttimpex
+  datasource:
+    url: jdbc:h2:mem:timestamp_db
+
+dev: false
+
+server:
+  port: 8081
