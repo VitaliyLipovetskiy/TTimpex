@@ -5,7 +5,7 @@ import java.time.LocalTime;
 /**
  * @author Vitalii Lypovetskyi
  */
-public interface TimestampProjection {
+public interface TimeStampProjection {
     int getPost();
     int getEvent();
     String getCard();

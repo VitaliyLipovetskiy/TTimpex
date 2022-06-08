@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="30 seconds">
-    <timestamp key="byDay" datePattern="yyyyMMdd"/>
     <!-- To enable JMX Management -->
     <jmxConfigurator/>
-    <appender name="file" class="ch.qos.logback.core.FileAppender">
-        <file>log/log-${byDay}.log</file>
-        <append>true</append>
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>log/log-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>3MB</maxFileSize>
+        </triggeringPolicy>
         <encoder>
             <charset>UTF-8</charset>
             <pattern>%date %-5level [%file:%line] %msg%n</pattern>
@@ -18,8 +23,8 @@
         </encoder>
     </appender>
     <logger name="com.lvv.ttimpex2" level="debug"/>
-    <root level="info">
-        <appender-ref ref="file"/>
+    <root level="warn">
         <appender-ref ref="console"/>
+        <appender-ref ref="file"/>
     </root>
 </configuration>

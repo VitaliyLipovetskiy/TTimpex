@@ -7,9 +7,11 @@ spring:
 server:
   port: 8081
 
-dev: true
-
 app:
+#  path-db: /Users/vitaliy/IdeaProjects/db/
   path-db: C:\TREZOR2\DATA
   sleep: 6000
   night: 9000
+  time:
+    start: 7
+    end: 20

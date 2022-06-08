@@ -1,7 +1,7 @@
 package com.lvv.ttimpex2.controller;
 
-import com.lvv.ttimpex2.molel.Timestamp;
-import com.lvv.ttimpex2.service.TimestampService;
+import com.lvv.ttimpex2.molel.TimeStamp;
+import com.lvv.ttimpex2.service.TimeStampService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,22 +15,22 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/rest")
-public class TimestampController {
+public class TimeStampController {
 
-    private TimestampService service;
+    private TimeStampService service;
 
     @Autowired
-    public TimestampController(TimestampService service) {
+    public TimeStampController(TimeStampService service) {
         this.service = service;
     }
 
     @GetMapping("/all")
-    public List<Timestamp> findAll() {
+    public List<TimeStamp> findAll() {
         return service.findAll();
     }
 
     @GetMapping("/last_card/{card}")
-    public Timestamp getTopByCard(@PathVariable("card") String card) {
+    public TimeStamp getTopByCard(@PathVariable("card") String card) {
         return service.getFirstByCard(card);
     }
 }
