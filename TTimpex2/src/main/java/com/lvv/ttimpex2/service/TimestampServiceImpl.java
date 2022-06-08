@@ -12,11 +12,8 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileReader;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -28,8 +25,8 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 @Service
 public class TimestampServiceImpl implements TimestampService {
-    private Environment env;
-    private TimestampRepository timestampRepository;
+    final private TimestampRepository timestampRepository;
+    final private ParadoxService paradoxService;
     private LocalDate localDate;
     private LocalTime lastExecutionTime;
     private String fileDB;
@@ -37,14 +34,14 @@ public class TimestampServiceImpl implements TimestampService {
     volatile private Long sleep;
     @Value("${app.night}")
     volatile private  Long sleepNight;
-
+    final private Environment env;
     final private Properties externalProperties = new Properties();
-
-    private static final Logger log = getLogger(TimestampServiceImpl.class);
+    final static private Logger log = getLogger(TimestampServiceImpl.class);
 
     @Autowired
-    public TimestampServiceImpl(TimestampRepository timestampRepository, Environment env) {
+    public TimestampServiceImpl(TimestampRepository timestampRepository, ParadoxService paradoxService, Environment env) {
         this.timestampRepository = timestampRepository;
+        this.paradoxService = paradoxService;
         this.env = env;
         checkHandling();
     }
@@ -79,7 +76,7 @@ public class TimestampServiceImpl implements TimestampService {
         return timestampRepository.getTopByCardAndEventOrderByTimeDesc(card, event);
     }
 
-    public void setLocalDate() {
+    private void checkLocalDate() {
         lastExecutionTime = LocalTime.now();
         if (localDate == null || !localDate.equals(LocalDate.now())) {
             localDate = LocalDate.now();
@@ -91,12 +88,12 @@ public class TimestampServiceImpl implements TimestampService {
         }
     }
 
-    public void checkHandling() {
+    private void checkHandling() {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
-                    setLocalDate();
+                    checkLocalDate();
 //                    System.out.println(fileDB + " " + lastExecutionTime);
                     if ((lastExecutionTime.isAfter(LocalTime.of(20, 0)) ||
                             lastExecutionTime.isBefore(LocalTime.of(7, 0))) &&
@@ -105,8 +102,37 @@ public class TimestampServiceImpl implements TimestampService {
                         sleep = sleepNight; // 15 минут
 //                        System.out.println(sleep);
                     }
-                    handlingParadox(fileDB);
+                    String fileProperties =
+                            System.getProperty("user.dir") + File.separator + "config" + File.separator + "config.properties";
+//                    System.out.println("====");
+//                    System.getProperties().stringPropertyNames().forEach(p -> System.out.println(p + "=>" + System.getProperty(p)));
+//                    System.out.println("====");
+                    log.debug("fileProperties=" + fileProperties);
 
+                    Path pathDB = null;
+                    try (FileReader reader = new FileReader(fileProperties)){
+                        externalProperties.load(reader);
+                        pathDB = Paths.get(externalProperties.getProperty("app.path-db") + fileDB + ".DB");
+                        sleep = Long.parseLong(externalProperties.getProperty("app.sleep"));
+                        sleepNight = Long.parseLong(externalProperties.getProperty("app.night"));
+                    } catch (Exception e) {
+                        log.error(e.toString());
+                    }
+                    if (pathDB == null) {
+                        pathDB = Paths.get(env.getProperty("app.path-db") + fileDB + ".DB");
+                    }
+                    log.debug("pathDB=" + pathDB);
+
+                    if (Files.notExists(pathDB)) {
+                        log.debug("Files.notExists " + pathDB);
+                        return;
+                    }
+                    paradoxService.handlingParadox(pathDB);
+
+                    log.debug("sleep=" + sleep +
+                            " DateTime=" + localDate + " " + lastExecutionTime +
+                            " fileDB=" + fileDB +
+                            " count=" + timestampRepository.count());
                     try {
                         Thread.sleep(sleep);
                     } catch (InterruptedException e) {
@@ -117,68 +143,4 @@ public class TimestampServiceImpl implements TimestampService {
             }
         }).start();
     }
-
-    public void handlingParadox(String fileName) {
-        String fileProperties =
-                System.getProperty("user.dir") + File.separator + "config" + File.separator + "config.properties";
-//        System.out.println("====");
-//        System.getProperties().stringPropertyNames().forEach(p -> System.out.println(p + "=>" + System.getProperty(p)));
-//        System.out.println("====");
-        log.debug("fileProperties=" + fileProperties);
-
-        String pathDB = null;
-        try (FileReader reader = new FileReader(fileProperties)){
-            externalProperties.load(reader);
-            pathDB = externalProperties.getProperty("app.path-db");
-//            System.out.println("pathDB=" + pathDB);
-            sleep = Long.parseLong(externalProperties.getProperty("app.sleep"));
-//            System.out.println("sleep = " + sleep);
-            sleepNight = Long.parseLong(externalProperties.getProperty("app.night"));
-//            System.out.println("night = " + sleepNight);
-        } catch (Exception e) {
-            log.error(e.toString());
-        }
-        if (pathDB == null) {
-            pathDB = env.getProperty("app.path-db");
-        }
-        log.debug("pathDB=" + pathDB + fileName + ".DB");
-
-        if (Files.notExists(Paths.get(pathDB + fileName + ".DB"))) {
-            log.debug("Files.notExists " + pathDB + fileName + ".DB");
-            return;
-        }
-        try {
-            Class.forName("com.googlecode.paradox.Driver");
-            try (Connection connection = DriverManager.getConnection("jdbc:paradox:" + pathDB);
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery("SELECT * FROM " + fileName)){
-
-                while (resultSet.next()) {
-                    Timestamp timestamp = new Timestamp(
-                            resultSet.getString("card") +
-                                    resultSet.getString("post") +
-                                    resultSet.getString("event") +
-                                    resultSet.getTime("time"),
-                            resultSet.getInt("post"),
-                            Math.abs(resultSet.getInt("event") - 1),
-                            resultSet.getString("card"),
-                            resultSet.getTime("time").toLocalTime());
-                    if (!timestampRepository.existsById(timestamp.getId())) {
-                        timestampRepository.save(timestamp);
-                    }
-                }
-            } catch (Exception e) {
-                log.error(e.toString());
-                e.printStackTrace();
-            }
-        }
-        catch (Exception e) {
-            log.error(e.toString());
-        }
-        log.debug("sleep=" + sleep +
-                " DateTime=" + localDate + " " + lastExecutionTime +
-                " fileDB=" + fileDB +
-                " count=" + timestampRepository.count());
-    }
-
 }
