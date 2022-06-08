@@ -1,7 +1,7 @@
 .idea
 /target
 *.iml
-/db
+/log
 /TTimpex1/target
 /TTimpex2/target
 /TTimpex2/mvnw
