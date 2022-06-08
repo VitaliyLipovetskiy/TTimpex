@@ -1,16 +1,23 @@
 package com.lvv.ttimpex2.molel;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 /**
  * @author Vitalii Lypovetskyi
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
 public class SCode {
-    private final String card;
-    private final String sCode;
-
-    public SCode(String card, String sCode) {
-        this.card = card;
-        this.sCode = sCode;
-    }
+    @Id
+    private String card;
+    private String sCode;
 
     @Override
     public String toString() {

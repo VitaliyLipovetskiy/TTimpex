@@ -130,14 +130,15 @@ public class TimeStampServiceImpl implements TimeStampService {
                     Path pathDB = Paths.get( path + fileDB + ".DB");
                     log.warn("pathDB=" + pathDB);
 
-                    if (Files.notExists(pathDB)) {
+                    if (Files.exists(pathDB)) {
+                        paradoxService.tableParadoxHandler(pathDB, new TimeStampHandler());
+                    } else {
                         log.error("Files.notExists " + pathDB);
-                        return;
+//                        return;
                     }
-                    paradoxService.tableParadoxHandler(pathDB, new TimeStampHandler());
 
-//                    Path pathCard = Paths.get(path + "TRZ_VIPS.DB");
-//                    paradoxService.tableParadoxHandler(pathCard, new CardHandler());
+                    Path pathCard = Paths.get(path + "TRZ_VIPS.DB");
+                    paradoxService.tableParadoxHandler(pathCard, new CardHandler());
 
                     Path pathSCode = Paths.get(path + "TRZ_SC.DB");
                     paradoxService.tableParadoxHandler(pathSCode, new SCodeHandler());

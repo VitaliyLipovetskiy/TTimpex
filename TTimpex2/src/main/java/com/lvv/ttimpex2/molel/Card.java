@@ -1,19 +1,23 @@
 package com.lvv.ttimpex2.molel;
 
-public class Card {
-    private final String card;
-    private final String firstName;
-    private final String lastName;
-    private final String middleName;
-    private final String position;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    public Card(String card, String firstName, String lastName, String middleName, String position) {
-        this.card = card;
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.position = position;
-    }
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+public class Card {
+    @Id
+    private String card;
+    private String firstName;
+    private String lastName;
+    private String middleName;
+    private String position;
 
     @Override
     public String toString() {

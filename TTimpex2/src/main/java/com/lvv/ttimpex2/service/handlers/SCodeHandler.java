@@ -1,8 +1,7 @@
 package com.lvv.ttimpex2.service.handlers;
 
-import com.lvv.ttimpex2.molel.Card;
 import com.lvv.ttimpex2.molel.SCode;
-import com.lvv.ttimpex2.repository.TimeStampRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.nio.file.Path;
 import java.sql.ResultSet;
@@ -11,9 +10,9 @@ import java.sql.SQLException;
 /**
  * @author Vitalii Lypovetskyi
  */
-public class SCodeHandler implements ParadoxHandler{
+public class SCodeHandler implements ParadoxHandler<SCode, String>{
     @Override
-    public void call(Path pathDB, ResultSet resultSet, TimeStampRepository timeStampRepository) throws SQLException {
+    public void call(Path pathDB, ResultSet resultSet, JpaRepository<SCode, String> repository) throws SQLException {
         while (resultSet.next()) {
             SCode sCode = new SCode(
                     resultSet.getString("CARD"),
