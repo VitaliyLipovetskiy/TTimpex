@@ -14,6 +14,6 @@ public interface TimeStampRepository extends JpaRepository<TimeStamp, String>{
     List<TimeStamp> findAllByPost(int post);
     List<TimeStamp> findAllByCard(String card);
     List<TimeStamp> findAllByCardAndEvent(String card, int event);
-    TimeStamp getFirstByCardOrderByTimeDesc(String card);
-    TimeStamp getTopByCardAndEventOrderByTimeDesc(String card, int event);
+    TimeStamp getFirstByCardOrderByDateTimeDesc(String card);
+    TimeStamp getTopByCardAndEventOrderByDateTimeDesc(String card, int event);
 }

@@ -1,6 +1,7 @@
 package com.lvv.ttimpex2.service;
 
 import com.lvv.ttimpex2.molel.TimeStamp;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 

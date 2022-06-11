@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @author Vitalii Lypovetskyi
@@ -18,13 +20,14 @@ public class TimeStampHandler implements ParadoxHandler<TimeStamp, String> {
                     resultSet.getString("card") +
                             resultSet.getString("post") +
                             resultSet.getString("event") +
-                            resultSet.getTime("time"),
+                            LocalDateTime.of(LocalDate.now(), resultSet.getTime("time").toLocalTime()),
+                    LocalDateTime.of(LocalDate.now(), resultSet.getTime("time").toLocalTime()),
                     resultSet.getInt("post"),
-                    Math.abs(resultSet.getInt("event") - 1),
                     resultSet.getString("card"),
-                    resultSet.getTime("time").toLocalTime());
+                    Math.abs(resultSet.getInt("event") - 1));
+
             if (!repository.existsById(timestamp.getId())) {
-                repository.save(timestamp);
+                System.out.println(repository.save(timestamp));
             }
         }
     }

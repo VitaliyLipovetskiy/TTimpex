@@ -4,25 +4,33 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "card", schema = "timestamp")
 public class Card {
     @Id
-    private String card;
+    @Column(name = "card")
+    private String id;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
+    @Column(name = "middle_name")
     private String middleName;
+    @Column
     private String position;
 
     @Override
     public String toString() {
         return "Card{" +
-                "card='" + card + '\'' +
+                "card='" + id + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", middleName='" + middleName + '\'' +

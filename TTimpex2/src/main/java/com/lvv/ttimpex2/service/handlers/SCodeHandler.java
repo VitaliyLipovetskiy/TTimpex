@@ -17,9 +17,11 @@ public class SCodeHandler implements ParadoxHandler<SCode, String>{
             SCode sCode = new SCode(
                     resultSet.getString("CARD"),
                     resultSet.getString("SCODE"));
-            System.out.println(sCode);
-//            if (!timeStampRepository.existsById(timestamp.getId())) {
-//                timeStampRepository.save(timestamp);
+            if (repository.findById(sCode.getId()).isPresent()) {
+                System.out.println("isPresent " + sCode);
+            }
+//            if (!repository.existsById(sCode.getId())) {
+//                System.out.println(repository.save(sCode));
 //            }
         }
     }

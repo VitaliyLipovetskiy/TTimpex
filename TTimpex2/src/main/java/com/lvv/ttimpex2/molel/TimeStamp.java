@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.time.LocalTime;
+import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 /**
  * @author Vitalii Lypovetskyi
@@ -15,17 +17,18 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-//@Table(name = "timestamp", schema = "ttimpex")
+@Table(name = "timestamp", schema = "timestamp")
 public class TimeStamp {
     @Id
-//    @Column
+    @Column
     private String id;
-//    @Column
+    @Column(name = "time")
+    private LocalDateTime dateTime;
+    @Column
     private int post;
-//    @Column
-    private int event;
-//    @Column
+    @Column
     private String card;
-//    @Column
-    private LocalTime time;
+    @Column
+    private int event;
+
 }

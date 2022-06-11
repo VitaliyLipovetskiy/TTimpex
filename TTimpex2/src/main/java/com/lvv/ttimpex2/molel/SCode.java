@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @author Vitalii Lypovetskyi
@@ -14,15 +16,18 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "s_code", schema = "timestamp")
 public class SCode {
     @Id
-    private String card;
+    @Column(name = "card")
+    private String id;
+    @Column(name = "s_code")
     private String sCode;
 
     @Override
     public String toString() {
         return "SCode{" +
-                "card='" + card + '\'' +
+                "card='" + id + '\'' +
                 ", sCode='" + sCode + '\'' +
                 '}';
     }

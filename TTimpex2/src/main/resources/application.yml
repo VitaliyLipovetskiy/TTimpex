@@ -2,7 +2,13 @@ spring:
   application:
     name: ttimpex
   datasource:
-    url: jdbc:h2:mem:timestamp_db
+#    url: jdbc:h2:mem:timestamp_db
+    url: jdbc:postgresql://localhost:5432/timestamp?currentSchema=timestamp
+    username: postgres
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 server:
   port: 8081

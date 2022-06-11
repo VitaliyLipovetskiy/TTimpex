@@ -20,10 +20,9 @@ public class CardHandler implements ParadoxHandler<Card, String>{
                     resultSet.getString("F"),
                     resultSet.getString("O"),
                     resultSet.getString("DOL"));
-            System.out.println(card);
-//            if (!timeStampRepository.existsById(timestamp.getId())) {
-//                timeStampRepository.save(timestamp);
-//            }
+            if (!repository.existsById(card.getId())) {
+                System.out.println(repository.save(card));
+            }
         }
     }
 }

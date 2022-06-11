@@ -51,7 +51,7 @@ public class TimeStampServiceImpl implements TimeStampService {
 
     public void setLocalDate(LocalDate localDate) {
         this.localDate = localDate;
-        timeStampRepository.deleteAll();
+//        timeStampRepository.deleteAll();
         String year = String.valueOf(localDate.getYear()).substring(2);
         String month = String.valueOf(localDate.getMonthValue());
         String day = String.valueOf(localDate.getDayOfMonth());
@@ -70,7 +70,7 @@ public class TimeStampServiceImpl implements TimeStampService {
 
     @Override
     public List<TimeStamp> findAll() {
-        return timeStampRepository.findAll(Sort.by(Sort.Direction.DESC, "time"));
+        return timeStampRepository.findAll(Sort.by(Sort.Direction.DESC, "dateTime"));
     }
 
     @Override
@@ -90,12 +90,12 @@ public class TimeStampServiceImpl implements TimeStampService {
 
     @Override
     public TimeStamp getFirstByCard(String card) {
-        return timeStampRepository.getFirstByCardOrderByTimeDesc(card);
+        return timeStampRepository.getFirstByCardOrderByDateTimeDesc(card);
     }
 
     @Override
     public TimeStamp getTopByCardAndEvent(String card, int event) {
-        return timeStampRepository.getTopByCardAndEventOrderByTimeDesc(card, event);
+        return timeStampRepository.getTopByCardAndEventOrderByDateTimeDesc(card, event);
     }
 
     private void checkTime() {
@@ -134,7 +134,6 @@ public class TimeStampServiceImpl implements TimeStampService {
                         paradoxService.tableParadoxHandler(pathDB, new TimeStampHandler());
                     } else {
                         log.error("Files.notExists " + pathDB);
-//                        return;
                     }
 
                     Path pathCard = Paths.get(path + "TRZ_VIPS.DB");
