@@ -1,7 +1,8 @@
 package com.lvv.ttimpex2.service.handlers;
 
 import com.lvv.ttimpex2.molel.TimeStamp;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.lvv.ttimpex2.repository.TimeStampRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.file.Path;
 import java.sql.ResultSet;
@@ -12,9 +13,16 @@ import java.time.LocalDateTime;
 /**
  * @author Vitalii Lypovetskyi
  */
-public class TimeStampHandler implements ParadoxHandler<TimeStamp, String> {
+public class TimeStampHandler implements ParadoxHandler {
+    final private TimeStampRepository repository;
+
+    @Autowired
+    public TimeStampHandler(TimeStampRepository repository) {
+        this.repository = repository;
+    }
+
     @Override
-    public void call(Path pathDB, ResultSet resultSet, JpaRepository<TimeStamp, String> repository) throws SQLException {
+    public void call(Path pathDB, ResultSet resultSet) throws SQLException {
         while (resultSet.next()) {
             TimeStamp timestamp = new TimeStamp(
                     resultSet.getString("card") +

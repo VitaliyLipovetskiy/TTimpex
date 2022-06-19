@@ -1,6 +1,9 @@
 package com.lvv.ttimpex2.service.handlers;
 
 import com.lvv.ttimpex2.molel.Card;
+import com.lvv.ttimpex2.repository.CardRepository;
+import com.lvv.ttimpex2.repository.TimeStampRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.nio.file.Path;
@@ -10,9 +13,17 @@ import java.sql.SQLException;
 /**
  * @author Vitalii Lypovetskyi
  */
-public class CardHandler implements ParadoxHandler<Card, String>{
+public class CardHandler implements ParadoxHandler{
+    final private CardRepository repository;
+
+    @Autowired
+    public CardHandler(CardRepository repository) {
+        this.repository = repository;
+    }
+
     @Override
-    public void call(Path pathDB, ResultSet resultSet, JpaRepository<Card, String> repository) throws SQLException {
+    public void call(Path pathDB, ResultSet resultSet) throws SQLException {
+        repository.deleteAll();
         while (resultSet.next()) {
             Card card = new Card(
                     resultSet.getString("CARD"),
