@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Entity
 @Table(name = "s_code", schema = "timestamp")
-public class SCode {
+public final class SCode {
     @Id
     @Column(name = "card")
     private String id;

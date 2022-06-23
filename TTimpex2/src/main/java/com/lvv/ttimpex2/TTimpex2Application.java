@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class TTimpex2Application {
+    private TTimpex2Application() {}
 
     public static void main(String[] args) {
         SpringApplication.run(TTimpex2Application.class, args);

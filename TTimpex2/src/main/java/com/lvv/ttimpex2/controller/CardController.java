@@ -13,7 +13,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/rest/card")
-public class CardController {
+public final class CardController {
     private CardService service;
 
     public CardController(CardService service) {

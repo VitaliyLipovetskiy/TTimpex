@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "timestamp", schema = "timestamp")
-public class TimeStamp {
+public final class TimeStamp {
     @Id
     @Column
     private String id;

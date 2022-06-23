@@ -27,19 +27,19 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @author Vitalii Lypovetskyi
  */
 @Service
-public class ParadoxService {
+public final class ParadoxService {
 
 //    private final JdbcTemplate jdbcTemplate;
-    final private TimeStampRepository timeStampRepository;
+    private final TimeStampRepository timeStampRepository;
     private LocalDate localDate;
     private LocalTime lastExecutionTime;
     private String fileDB;
     @Value("${app.sleep}")
-    volatile private Long sleep;
+    private volatile Long sleep;
     @Value("${app.night}")
-    volatile private  Long sleepNight;
-    final private Properties externalProperties = new Properties();
-    final static private Logger log = getLogger(ParadoxService.class);
+    private volatile Long sleepNight;
+    private final Properties externalProperties = new Properties();
+    private static final Logger LOG = getLogger(ParadoxService.class);
 
     public ParadoxService(TimeStampRepository timeStampRepository) {
         this.timeStampRepository = timeStampRepository;
@@ -92,12 +92,12 @@ public class ParadoxService {
                 paradoxHandler.call(pathDB, resultSet);
 
             } catch (Exception e) {
-                log.error(e.toString());
+                LOG.error(e.toString());
                 e.printStackTrace();
             }
         }
         catch (Exception e) {
-            log.error(e.toString());
+            LOG.error(e.toString());
         }
     }
 
@@ -118,18 +118,18 @@ public class ParadoxService {
                     }
                     setLastExecutionTime(LocalTime.now());
                     Path pathDB = Paths.get( path + fileDB + ".DB");
-                    log.warn("pathDB={}", pathDB);
+                    LOG.warn("pathDB={}", pathDB);
                     if (Files.exists(pathDB)) {
                         tableParadoxHandler(pathDB, new TimeStampHandler(timeStampRepository));
                     } else {
-                        log.error("Files.notExists {}", pathDB);
+                        LOG.error("Files.notExists {}", pathDB);
                     }
-                    log.warn("sleep={} DateTime={} {} fileDB={} count={}",
+                    LOG.warn("sleep={} DateTime={} {} fileDB={} count={}",
                             sleep, localDate, lastExecutionTime, fileDB, timeStampRepository.count());
                     try {
                         Thread.sleep(sleep);
                     } catch (InterruptedException e) {
-                        log.error(e.toString());
+                        LOG.error(e.toString());
                         e.printStackTrace();
                     }
                 }

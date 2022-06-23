@@ -13,7 +13,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/rest/scode")
-public class SCodeController {
+public final class SCodeController {
     private SCodeService service;
 
     public SCodeController(SCodeService service) {

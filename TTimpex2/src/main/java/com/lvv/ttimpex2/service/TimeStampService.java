@@ -2,7 +2,6 @@ package com.lvv.ttimpex2.service;
 
 import com.lvv.ttimpex2.molel.TimeStamp;
 import com.lvv.ttimpex2.repository.TimeStampRepository;
-import org.slf4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -11,16 +10,16 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.*;
 
-import static org.slf4j.LoggerFactory.getLogger;
+//import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * @author Vitalii Lypovetskyi
  */
 @Service
-public class TimeStampService {
-    final private TimeStampRepository timeStampRepository;
+public final class TimeStampService {
+    private final TimeStampRepository timeStampRepository;
 
-    final static private Logger log = getLogger(TimeStampService.class);
+//    final static private Logger log = getLogger(TimeStampService.class);
 
     public TimeStampService(TimeStampRepository timestampRepository) {
         this.timeStampRepository = timestampRepository;
@@ -67,9 +66,9 @@ public class TimeStampService {
         return spec;
     }
 
-    static class FilterSpecs {
+    static final class FilterSpecs {
 
-        public FilterSpecs() {}
+        private FilterSpecs() {}
 
         public static Specification<TimeStamp> today(String date) {
             LocalDate localDate = LocalDate.parse(date);

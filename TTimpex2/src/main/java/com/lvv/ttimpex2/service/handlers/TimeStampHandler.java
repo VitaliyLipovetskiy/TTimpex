@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 /**
  * @author Vitalii Lypovetskyi
  */
-public class TimeStampHandler implements ParadoxHandler {
-    final private TimeStampRepository repository;
+public final class TimeStampHandler implements ParadoxHandler {
+    private final TimeStampRepository repository;
 
     public TimeStampHandler(TimeStampRepository repository) {
         this.repository = repository;
@@ -33,7 +33,7 @@ public class TimeStampHandler implements ParadoxHandler {
                     Math.abs(resultSet.getInt("event") - 1));
 
             if (!repository.existsById(timestamp.getId())) {
-                System.out.println(repository.save(timestamp));
+                repository.save(timestamp);
             }
         }
     }

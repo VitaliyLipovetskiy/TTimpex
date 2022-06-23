@@ -11,22 +11,22 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * @author Vitalii Lypovetskyi
  */
-public class UtilsDB {
-    final static private Logger log = getLogger(UtilsDB.class);
+public final class UtilsDB {
+    private static final Logger LOG = getLogger(UtilsDB.class);
     private UtilsDB() {}
 
     public static String pathDB(Properties externalProperties) {
         String fileProperties =
                 System.getProperty("user.dir") + File.separator + "config" + File.separator + "config.properties";
-        log.warn("fileProperties={}", fileProperties);
+        LOG.warn("fileProperties={}", fileProperties);
 
         try (FileReader reader = new FileReader(fileProperties)){
             externalProperties.load(reader);
         } catch (Exception e) {
-            log.error(e.toString());
+            LOG.error(e.toString());
         }
         String pathDB = externalProperties.getProperty("app.path-db");
-        log.warn("Path DB: {}", pathDB);
+        LOG.warn("Path DB: {}", pathDB);
         return pathDB;
     }
 }

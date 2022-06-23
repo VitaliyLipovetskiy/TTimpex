@@ -10,8 +10,8 @@ import java.sql.SQLException;
 /**
  * @author Vitalii Lypovetskyi
  */
-public class SCodeHandler implements ParadoxHandler {
-    final private SCodeRepository repository;
+public final class SCodeHandler implements ParadoxHandler {
+    private final SCodeRepository repository;
 
     public SCodeHandler(SCodeRepository repository) {
         this.repository = repository;
@@ -25,7 +25,7 @@ public class SCodeHandler implements ParadoxHandler {
                     resultSet.getString("CARD"),
                     resultSet.getString("SCODE"));
             if (!repository.existsById(sCode.getId())) {
-                System.out.println(repository.save(sCode));
+                repository.save(sCode);
             }
         }
     }

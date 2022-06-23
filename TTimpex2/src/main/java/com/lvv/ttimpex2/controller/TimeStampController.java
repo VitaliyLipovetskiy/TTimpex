@@ -16,7 +16,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/rest")
-public class TimeStampController {
+public final class TimeStampController {
 
     private TimeStampService service;
 

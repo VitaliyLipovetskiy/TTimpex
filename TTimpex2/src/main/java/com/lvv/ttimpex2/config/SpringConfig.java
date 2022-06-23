@@ -9,7 +9,7 @@ import javax.sql.DataSource;
  * @author Vitalii Lypovetskyi
  */
 //@Configuration
-public class SpringConfig {
+public final class SpringConfig {
 
 //    @Bean
     public DataSource dataSource() {
