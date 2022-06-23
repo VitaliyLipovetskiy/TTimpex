@@ -19,6 +19,8 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -102,9 +104,11 @@ public class ParadoxService {
 
 
     private void checkHandling() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        executorService.execute(() -> {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
                 while (true) {
                     String path = UtilsDB.pathDB(externalProperties);
                     if (externalProperties.getProperty("app.sleep") != null) {
@@ -115,21 +119,14 @@ public class ParadoxService {
                     }
                     setLastExecutionTime(LocalTime.now());
                     Path pathDB = Paths.get( path + fileDB + ".DB");
-                    log.warn("pathDB=" + pathDB);
+                    log.warn("pathDB={}", pathDB);
                     if (Files.exists(pathDB)) {
                         tableParadoxHandler(pathDB, new TimeStampHandler(timeStampRepository));
                     } else {
-                        log.error("Files.notExists " + pathDB);
+                        log.error("Files.notExists {}", pathDB);
                     }
-
-//                    Path pathCard = Paths.get(path + "TRZ_VIPS.DB");
-//                    paradoxService.tableParadoxHandler(pathCard, new CardHandler(cardRepository));
-
-
-                    log.warn("sleep=" + sleep +
-                            " DateTime=" + localDate + " " + lastExecutionTime +
-                            " fileDB=" + fileDB +
-                            " count=" + timeStampRepository.count());
+                    log.warn("sleep={} DateTime={} {} fileDB={} count={}",
+                            sleep, localDate, lastExecutionTime, fileDB, timeStampRepository.count());
                     try {
                         Thread.sleep(sleep);
                     } catch (InterruptedException e) {
@@ -137,8 +134,10 @@ public class ParadoxService {
                         e.printStackTrace();
                     }
                 }
-            }
-        }).start();
+//            }
+        });
+//        .start();
+        executorService.shutdown();
     }
 
 }

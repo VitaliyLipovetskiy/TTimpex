@@ -37,11 +37,11 @@ public class SCodeService {
     public void checkSCode() {
         String path = UtilsDB.pathDB(externalProperties);
         Path pathDB = Paths.get( path + "TRZ_SC.DB");
-        log.warn("pathDB_SCode=" + pathDB);
+        log.warn("pathDB_SCode={}", pathDB);
         if (Files.exists(pathDB)) {
             ParadoxService.tableParadoxHandler(pathDB, new SCodeHandler(repository));
         } else {
-            log.error("Files.notExists " + pathDB);
+            log.error("Files.notExists {}", pathDB);
         }
     }
 }

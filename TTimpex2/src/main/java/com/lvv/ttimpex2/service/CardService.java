@@ -38,11 +38,11 @@ public class CardService {
     public void checkCard() {
         String path = UtilsDB.pathDB(externalProperties);
         Path pathDB = Paths.get( path + "TRZ_VIPS.DB");
-        log.warn("pathDB_Card=" + pathDB);
+        log.warn("pathDB_Card={}", pathDB);
         if (Files.exists(pathDB)) {
             ParadoxService.tableParadoxHandler(pathDB, new CardHandler(repository));
         } else {
-            log.error("Files.notExists " + pathDB);
+            log.error("Files.notExists {}", pathDB);
         }
     }
 
