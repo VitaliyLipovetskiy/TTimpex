@@ -1,7 +1,6 @@
 package com.lvv.ttimpex2.repository;
 
 import com.lvv.ttimpex2.molel.TimeStamp;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;

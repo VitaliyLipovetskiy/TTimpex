@@ -3,10 +3,8 @@ package com.lvv.ttimpex2.service;
 import com.lvv.ttimpex2.molel.SCode;
 import com.lvv.ttimpex2.repository.SCodeRepository;
 import com.lvv.ttimpex2.service.handlers.SCodeHandler;
-import com.lvv.ttimpex2.service.handlers.TimeStampHandler;
 import com.lvv.ttimpex2.utils.UtilsDB;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;

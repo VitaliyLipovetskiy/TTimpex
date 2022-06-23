@@ -1,6 +1,5 @@
 package com.lvv.ttimpex2.molel;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +14,6 @@ import java.time.LocalDateTime;
  * @author Vitalii Lypovetskyi
  */
 @Data
-//@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "timestamp", schema = "timestamp")

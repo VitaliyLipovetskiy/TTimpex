@@ -2,7 +2,6 @@ package com.lvv.ttimpex2.service.handlers;
 
 import com.lvv.ttimpex2.molel.TimeStamp;
 import com.lvv.ttimpex2.repository.TimeStampRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.file.Path;
 import java.sql.ResultSet;
@@ -16,7 +15,6 @@ import java.time.LocalDateTime;
 public class TimeStampHandler implements ParadoxHandler {
     final private TimeStampRepository repository;
 
-    @Autowired
     public TimeStampHandler(TimeStampRepository repository) {
         this.repository = repository;
     }

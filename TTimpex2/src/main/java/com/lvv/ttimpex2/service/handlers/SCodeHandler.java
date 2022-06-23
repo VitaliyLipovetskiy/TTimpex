@@ -2,7 +2,6 @@ package com.lvv.ttimpex2.service.handlers;
 
 import com.lvv.ttimpex2.molel.SCode;
 import com.lvv.ttimpex2.repository.SCodeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.file.Path;
 import java.sql.ResultSet;
@@ -14,7 +13,6 @@ import java.sql.SQLException;
 public class SCodeHandler implements ParadoxHandler {
     final private SCodeRepository repository;
 
-    @Autowired
     public SCodeHandler(SCodeRepository repository) {
         this.repository = repository;
     }

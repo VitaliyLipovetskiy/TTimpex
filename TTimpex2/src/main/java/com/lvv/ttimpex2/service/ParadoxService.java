@@ -6,7 +6,6 @@ import com.lvv.ttimpex2.service.handlers.TimeStampHandler;
 import com.lvv.ttimpex2.utils.UtilsDB;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
