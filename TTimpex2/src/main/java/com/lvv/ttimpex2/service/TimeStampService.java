@@ -22,7 +22,7 @@ public class TimeStampService {
 
     final static private Logger log = getLogger(TimeStampService.class);
 
-    public TimeStampService(TimeStampRepository timestampRepository, ParadoxService paradoxService) {
+    public TimeStampService(TimeStampRepository timestampRepository) {
         this.timeStampRepository = timestampRepository;
     }
 
@@ -68,6 +68,9 @@ public class TimeStampService {
     }
 
     static class FilterSpecs {
+
+        public FilterSpecs() {}
+
         public static Specification<TimeStamp> today(String date) {
             LocalDate localDate = LocalDate.parse(date);
             return (Specification<TimeStamp>) (root, criteriaQuery, criteriaBuilder) ->
