@@ -1,23 +1,20 @@
-CREATE TABLE timestamp (
-    id                  varchar,
-    time                timestamp(0),
-    post                int,
-    card                varchar(4),
-    event               int,
-    PRIMARY KEY (id)
+CREATE TABLE s_code (
+    card                varchar (4) PRIMARY KEY,
+    s_code              varchar (8)
 );
-
 CREATE TABLE card (
-    card                varchar (4),
+    card                varchar (4) PRIMARY KEY,
     first_name          varchar,
     last_name           varchar,
     middle_name         varchar,
-    position            varchar,
-    PRIMARY KEY (card)
+    position            varchar--,
+--     FOREIGN KEY (card) REFERENCES s_code(card)
 );
-
-CREATE TABLE s_code (
-    card                varchar (4),
-    s_code              varchar (8),
-    PRIMARY KEY (card)
+CREATE TABLE timestamp (
+    id                  VARCHAR PRIMARY KEY,
+    date_time           TIMESTAMP,
+    post                INTEGER,
+    card                VARCHAR(4),
+    event               INTEGER--,
+--     FOREIGN KEY (card) REFERENCES card(card)
 );

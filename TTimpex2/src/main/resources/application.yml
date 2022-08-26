@@ -2,7 +2,6 @@ spring:
   application:
     name: ttimpex
   datasource:
-#    url: jdbc:h2:mem:timestamp_db
     url: jdbc:postgresql://localhost:5432/timestamp?currentSchema=timestamp
     username: postgres
     password: admin
@@ -14,10 +13,10 @@ server:
   port: 8081
 
 app:
-#  path-db: /Users/vitaliy/IdeaProjects/db/
   path-db: C:\TREZOR2\DATA
   sleep: 6000
   night: 9000
   time:
     start: 7
     end: 20
+

@@ -2,6 +2,7 @@ package com.lvv.ttimpex2.controller;
 
 import com.lvv.ttimpex2.molel.TimeStamp;
 import com.lvv.ttimpex2.service.TimeStampService;
+import com.lvv.ttimpex2.to.TimeStampTo;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
@@ -34,10 +35,20 @@ public final class TimeStampController {
         return service.findAll(PageRequest.of(pageNumber, pageSize, order), filter).toList();
     }
 
+    @GetMapping("/all/to")
+    public List<TimeStampTo> findAllTo(@RequestParam Map<String,String> params) {
+        Sort order = Sort.by(Sort.Direction.DESC, "dateTime");
+        Map<String, String> filter = new HashMap<>();
+        filter.put("date", LocalDate.now().minusDays(1).toString());
+        int pageSize = Integer.parseInt(params.getOrDefault("pageSize", "100"));
+        int pageNumber = Integer.parseInt(params.getOrDefault("pageNumber", "0"));
+        return service.findAllTo(PageRequest.of(pageNumber, pageSize, order), filter);
+    }
+
     @GetMapping("/all")
     public List<TimeStamp> findAll(@RequestParam Map<String,String> params) {//, @PathVariable("date") @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate date) {
         Sort order = Sort.by(Sort.Direction.DESC, "dateTime");
-        String localDate = params.getOrDefault("date", LocalDate.now().minusDays(1).toString());
+        String localDate = params.getOrDefault("date", LocalDate.now().minusDays(0).toString());
         Map<String, String> filter = new HashMap<>();
         filter.put("date", localDate);
         int pageSize = Integer.parseInt(params.getOrDefault("pageSize", "100"));

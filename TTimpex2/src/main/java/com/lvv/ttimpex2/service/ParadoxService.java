@@ -6,6 +6,7 @@ import com.lvv.ttimpex2.service.handlers.TimeStampHandler;
 import com.lvv.ttimpex2.utils.UtilsDB;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
@@ -100,7 +101,6 @@ public final class ParadoxService {
             LOG.error(e.toString());
         }
     }
-
 
     private void checkHandling() {
         ExecutorService executorService = Executors.newFixedThreadPool(1);

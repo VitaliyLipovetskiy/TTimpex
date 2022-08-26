@@ -2,6 +2,7 @@ package com.lvv.ttimpex2.service;
 
 import com.lvv.ttimpex2.molel.TimeStamp;
 import com.lvv.ttimpex2.repository.TimeStampRepository;
+import com.lvv.ttimpex2.to.TimeStampTo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,6 +31,17 @@ public final class TimeStampService {
 //            return timeStampRepository.findAll(page);
 //        } else {
         return timeStampRepository.findAll(specification(filter), page);
+//        }
+    }
+
+    public List<TimeStampTo> findAllTo(PageRequest page, Map<String, String> filter) {
+//        if (filter.isEmpty()) {
+//            return timeStampRepository.findAll(page);
+//        } else {
+
+        List<TimeStampTo> allTo = timeStampRepository.findAllTo();
+        System.out.println(allTo.size());
+        return allTo;
 //        }
     }
 

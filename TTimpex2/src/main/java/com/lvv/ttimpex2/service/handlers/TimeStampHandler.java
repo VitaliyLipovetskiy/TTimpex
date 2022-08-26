@@ -31,7 +31,6 @@ public final class TimeStampHandler implements ParadoxHandler {
                     resultSet.getInt("post"),
                     resultSet.getString("card"),
                     Math.abs(resultSet.getInt("event") - 1));
-
             if (!repository.existsById(timestamp.getId())) {
                 repository.save(timestamp);
             }

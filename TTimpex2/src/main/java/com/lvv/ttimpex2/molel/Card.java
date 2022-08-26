@@ -4,10 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Data
 @AllArgsConstructor
@@ -17,6 +16,8 @@ import javax.persistence.Table;
 public final class Card {
     @Id
     @Column(name = "card")
+    @NotNull
+    @Size(min = 4, max = 4)
     private String id;
     @Column(name = "first_name")
     private String firstName;
@@ -26,6 +27,17 @@ public final class Card {
     private String middleName;
     @Column
     private String position;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "card")
+//    private SCode s_code;
+
+//    public Card(String id, String firstName, String lastName, String middleName, String position) {
+//        this.id = id;
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.middleName = middleName;
+//        this.position = position;
+//    }
 
     @Override
     public String toString() {

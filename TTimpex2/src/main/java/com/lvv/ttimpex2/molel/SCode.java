@@ -4,10 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * @author Vitalii Lypovetskyi
@@ -20,9 +19,15 @@ import javax.persistence.Table;
 public final class SCode {
     @Id
     @Column(name = "card")
+    @NotNull
+    @Size(min = 4, max = 4)
     private String id;
+    @NotNull
+    @Size(min = 8, max = 8)
     @Column(name = "s_code")
     private String sCode;
+//    @OneToOne(mappedBy = "card", cascade = CascadeType.ALL)
+//    private
 
     @Override
     public String toString() {

@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -30,6 +31,10 @@ public final class CardService {
 
     public List<Card> findAll() {
         return repository.findAll();
+    }
+
+    public Optional<Card> findById(String id) {
+        return repository.findById(id);
     }
 
     public void checkCard() {
