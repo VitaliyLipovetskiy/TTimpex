@@ -44,7 +44,7 @@ public final class ParadoxService {
 
     public ParadoxService(TimeStampRepository timeStampRepository) {
         this.timeStampRepository = timeStampRepository;
-        checkHandling();
+//        checkHandling();
     }
 
     public void setSleep(Long sleep) {

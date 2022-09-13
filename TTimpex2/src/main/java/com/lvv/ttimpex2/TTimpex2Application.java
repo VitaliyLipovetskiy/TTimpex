@@ -2,12 +2,19 @@ package com.lvv.ttimpex2;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.time.LocalDate;
 
 @SpringBootApplication
-public class TTimpex2Application {
+public class TTimpex2Application extends SpringBootServletInitializer {
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(TTimpex2Application.class);
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(TTimpex2Application.class, args);
