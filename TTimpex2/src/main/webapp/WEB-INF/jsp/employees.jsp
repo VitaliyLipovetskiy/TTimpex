@@ -24,13 +24,14 @@
                 <th class="align-middle text-center"><spring:message code="employee.department"/></th>
                 <th class="align-middle text-center" style="width: 50px"><spring:message code="employee.startTime"/></th>
                 <th class="align-middle text-center" style="width: 50px"><spring:message code="employee.endTime"/></th>
-                <th class="align-middle"></th>
+                <th class="align-middle text-center"><spring:message code="employee.recruitment"/></th>
+                <th class="align-middle text-center"><spring:message code="employee.dismissal"/></th>
                 <th>
                     <div class="align-middle text-center cell-choice">
                         <input type='checkbox' id="filtered" onclick='selectFilter($(this));'/>
                     </div>
                 </th>
-                <th class="align-middle"></th>
+                <th class="align-middle text-center"></th>
             </tr>
             </thead>
         </table>
@@ -49,17 +50,17 @@
                     <input type="hidden" id="id" name="id">
 
                     <div class="container">
-                        <div class="row justify-content-around form-check form-check-inline">
-                            <div class="form-group col-sm-10">
+                        <div class="row justify-content-around">
+                            <div class="form-group col-sm">
                                 <label for="lastName" class="col-form-label"><spring:message code="employee.lastName"/></label>
                                 <input type="text" class="form-control" id="lastName" name="lastName"
                                        placeholder="<spring:message code="employee.lastName"/>">
                             </div>
 
-                            <div class="form-group col-sm-2">
-                                <label for="worked" class="col-form-label"><spring:message code="employee.worked"/></label>
-                                <input type="checkbox" class="form-check-input" id="worked" name="worked" onclick="changeWorked()">
-                            </div>
+<%--                            <div class="form-group col-sm-2">--%>
+<%--                                <label for="worked" class="col-form-label"><spring:message code="employee.worked"/></label>--%>
+<%--                                <input type="checkbox" class="form-check-input" id="worked" name="worked" onclick="changeWorked()">--%>
+<%--                            </div>--%>
                         </div>
                     </div>
 
@@ -108,6 +109,22 @@
                                 <label for="endTime" class="col-form-label"><spring:message code="employee.endTime"/></label>
                                 <input type="time" class="form-control" id="endTime" name="endTime"
                                        placeholder="<spring:message code="employee.endTime"/>">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container">
+                        <div class="row justify-content-around">
+                            <div class="form-group col-sm-5">
+                                <label for="recruitment" class="col-form-label"><spring:message code="employee.recruitment"/></label>
+                                <input type="date" class="form-control" id="recruitment" name="recruitment"
+                                       placeholder="<spring:message code="employee.recruitment"/>">
+                            </div>
+
+                            <div class="form-group col-sm-5">
+                                <label for="dismissal" class="col-form-label"><spring:message code="employee.dismissal"/></label>
+                                <input type="date" class="form-control" id="dismissal" name="dismissal"
+                                       placeholder="<spring:message code="employee.dismissal"/>">
                             </div>
                         </div>
                     </div>

@@ -4,6 +4,7 @@ let reportAjaxUrl = "api/ts/";
 
 const ctx = {
     ajaxUrl: reportAjaxUrl,
+    // updateTable: updateTableByData
     updateTable: function () {
         $.get(reportAjaxUrl, updateTableByData);
     }
@@ -140,6 +141,7 @@ function formColumns(data) {
             data: "choice",
             render: function (data, type, row) {
                 if (type === "display") {
+                    console.log(row);
                     return "<div class='align-middle text-center cell-choice'><input type='checkbox' " + (data ? "checked" : "") + " onclick='choice($(this)," + row.id + ");'/></div>";//enable($(this)," + row.id + ");
                 }
                 return data;
@@ -211,6 +213,8 @@ function formColumns(data) {
 }
 
 function choice(chkbox, id) {
+    // console.log(id);
+    // console.log(ctx.datatableApi.cell((id - 1), 2));
     ctx.datatableApi.cell((id - 1), 2).data(chkbox.is(":checked"));
 
 //  https://stackoverflow.com/a/22213543/548473

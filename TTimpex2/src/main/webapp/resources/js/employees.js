@@ -1,6 +1,6 @@
-// let table;
 const employeesAjaxUrl = "api/employees/";
 const departmentAjaxUrl = "api/department/";
+const workedAjaxUrl = "api/worked/";
 const departments = [];
 
 const ctx = {
@@ -34,7 +34,7 @@ $(function () {
                         orderable: false
                     },
                     {
-                        data: 'department',
+                        data: 'departmentName',
                         visible: false,
                         render: function (data, type, row) {
                             if (type === "display") {
@@ -71,6 +71,36 @@ $(function () {
                         orderable: false
                     },
                     {
+                        data: 'recruitment',
+                        defaultContent: "",
+                        render: function (data, type, row) {
+                            if (type === "display") {
+                                if (typeof data === "string") {
+                                    // let parts = data.split('-');
+                                    // let date = new Date(parts[0], parts[1] - 1, parts[2]);
+                                    // console.log(date.toLocaleDateString('ru-RU'));
+                                    return "<div class='align-middle text-center cell-choice'>" + data.split('-').reverse().join('.') + "</div>";
+                                }
+                                return "<div class='align-middle text-center cell-choice'></div>";
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'dismissal',
+                        render: function (data, type, row) {
+                            if (type === "display") {
+                                if (typeof data === "string") {
+                                    return "<div class='align-middle text-center cell-choice'>" + data.split('-').reverse().join('.') + "</div>";
+                                }
+                                return "<div class='align-middle text-center cell-choice'></div>";
+                            }
+                            return data;
+                        },
+                        orderable: false,
+                        defaultContent: "",
+                    },
+                    {
                         orderable: false,
                         defaultContent: "",
                         render: function renderEditBtn(data, type, row) {
@@ -80,23 +110,16 @@ $(function () {
                         }
                     },
                     {
-                        orderable: false,
-                        defaultContent: "",
-                        render: function renderDeleteBtn(data, type, row) {
-                            if (type === "display") {
-                                return "<div class='align-middle text-center'><a onclick='deleteRow(" + row.id + ");'><span class='fa fa-remove'></span></a></div>";
-                            }
-                        }
-                    },
-                    {
-                        data: 'worked',
+                        // data: false,
                         visible: false,
-                        // render: function (data, type, row) {
-                        //     if (type === "display") {
-                        //         return "<div class='align-middle text-center cell-choice'><input type='checkbox' " + (data ? "checked" : "") + " onclick=''/></div>";
-                        //     }
-                        //     return data;
-                        // },
+                        render: function (data, type, row) {
+                            if (row.recruitment === null && row.dismissal === null) {
+                                return false;
+                            } else if (row.dismissal === null) {
+                                return true;
+                            }
+                            return false;
+                        },
                         orderable: false
                     }
                 ],
@@ -109,12 +132,24 @@ $(function () {
                 //     left: 3,
                     // righ
                 // },
+                fixedHeader: {
+                    header: true,
+                    // footer: true
+                },
                 createdRow: function (row, data, dataIndex) {
-                    // console.log(data.worked);
-                    if (!data.worked) {
-                //         // console.log(data);
-                        $(row).attr("data-employee-worked", true);
+                    let worked = true;
+                    if (data.recruitment === null && data.dismissal === null) {
+                        worked = true;
+                    } else {
+                        if (data.dismissal === null) {
+                            worked = false;
+                        }
                     }
+                    // console.log(row);
+                    // console.log(data);
+                    // console.log(dataIndex);
+                    // console.log(data.name + ' ' + data.recruitment + ' ' + data.dismissal + ' ' + worked);
+                    $(row).attr("data-employee-worked", worked);
                 },
                 // columnDefs: [
                 //     {
@@ -136,18 +171,18 @@ $(function () {
                         .data()
                         .each(function (group, i) {
                             // if (group === null) {
-                            //     if (last !== group) {
+                            //     if (last !== null) {
                             //         $(rows)
                             //             .eq(i)
-                            //             .before('<tr class="group"><td colspan="6">' + group.name + '</td></tr>');
-                            //
-                            //         last = group;
-                            //     }
+                            //             .before('<tr class="group"><td colspan="7"></td></tr>');
+                                    //
+                                    // last = null;
+                                // }
                             // } else {
-                                if (last !== group) {
+                                if (last !== group && group !== '') {
                                     $(rows)
                                         .eq(i)
-                                        .before('<tr class="group"><td colspan="6">' + group + '</td></tr>');
+                                        .before('<tr class="group"><td colspan="7">' + group + '</td></tr>');
 
                                     last = group;
                                 }
@@ -156,7 +191,7 @@ $(function () {
                 }
             });
 
-            ctx.datatableApi.column(7).search(true).draw();
+            ctx.datatableApi.column(8).search(true).draw();
 
             form = $('#detailsForm');
 
@@ -167,26 +202,26 @@ $(function () {
 
 function save() {
     let data = form.serializeArray();
+    // console.log(data);
     let dataForm = {};
     dataForm.id = data.find(v => v.name === 'id').value;
     dataForm.firstName = data.find(v => v.name === 'firstName').value;
     dataForm.lastName = data.find(v => v.name === 'lastName').value;
     dataForm.middleName = data.find(v => v.name === 'middleName').value;
     dataForm.cardId = data.find(v => v.name === 'cardId').value;
+    dataForm.name = '';
     let department = $('#department option:selected');
     if (department.val() === '0' || department.val() === undefined) {
         dataForm.department = null;
     } else {
         dataForm.department = {id: department.val(), name: department.text()};
     }
-    let worked = data.find(v => v.name === 'worked');
-    if (worked === undefined) {
-        dataForm.worked = false;
-    } else {
-        dataForm.worked = worked.value;
-    }
     dataForm.startTime = data.find(v => v.name === 'startTime').value;
     dataForm.endTime = data.find(v => v.name === 'endTime').value;
+    dataForm.recruitment = data.find(v => v.name === 'recruitment').value;
+    dataForm.dismissal = data.find(v => v.name === 'dismissal').value;
+
+    // console.log(dataForm);
 
     $.ajax({
         type: "POST",
@@ -202,14 +237,15 @@ function save() {
 }
 
 function updateDepartments() {
-    $.get(departmentAjaxUrl, function (data) {
-        $.each(data, function (key, value) {
-            if (departments.filter(v => v.id === value.id).length === 0) {
-                departments.push(value);
-                $('#department').append('<option value="'+value.id+'">'+value.name+'</option>')
-            }
+    $.get(departmentAjaxUrl,
+        function (data) {
+            $.each(data, function (key, value) {
+                if (departments.filter(v => v.id === value.id).length === 0) {
+                    departments.push(value);
+                    $('#department').append('<option value="' + value.id + '">' + value.name + '</option>')
+                }
+            });
         });
-    });
 }
 
 function updateRow(id) {
@@ -218,27 +254,26 @@ function updateRow(id) {
     updateDepartments();
     $.get(ctx.ajaxUrl + id, function (data) {
         $.each(data, function (key, value) {
-            if (key === 'worked') {
-                $("#worked").prop('checked', value);
-            } else if (key === 'department') {
+            if (key === 'department') {
                 if (data.department !== null) {
                     $('select[id=department]').val(data.department.id);
                 }
             }
             form.find("input[name='" + key + "']").val(value);
         });
+        // $.get(workedAjaxUrl + id, function (data) {
+        //     $.each(data, function (key, value) {
+        //         form.find("input[name='" + key + "']").val(value);
+        //     })
+        // });
         $('#editRow').modal();
     });
 }
 
 function selectFilter(chkbox) {
     if (chkbox.is(":checked")) {
-        ctx.datatableApi.column(7).search('').draw();
+        ctx.datatableApi.column(8).search('').draw();
     } else {
-        ctx.datatableApi.column(7).search(true).draw();
+        ctx.datatableApi.column(8).search(true).draw();
     }
-}
-
-function changeWorked() {
-    form.find("input[name='worked']").val($("#worked").is(':checked'));
 }

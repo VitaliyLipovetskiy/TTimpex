@@ -13,7 +13,7 @@ spring:
 #      write-dates-as-timestamps: false
 
 server:
-  port: 8081
+  port: 8089
 
 app:
   path-db: C:\TREZOR2\DATA
