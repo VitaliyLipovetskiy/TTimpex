@@ -6,6 +6,7 @@ import com.lvv.ttimpex2.molel.Worked;
 import com.lvv.ttimpex2.repository.DaysOffRepository;
 import com.lvv.ttimpex2.repository.EmployeeRepository;
 import com.lvv.ttimpex2.repository.WorkedRepository;
+import com.lvv.ttimpex2.to.DayOffTo;
 import com.lvv.ttimpex2.to.EmployeeDaysOffTo;
 import com.lvv.ttimpex2.to.EmployeeTo;
 import com.lvv.ttimpex2.utils.Util;
@@ -36,40 +37,35 @@ public class DayOffService {
     }
 
     public Collection<EmployeeDaysOffTo> getAllEmployeesForWithHolidays(LocalDate startDate, LocalDate endDate) {
-        Collection<EmployeeDaysOffTo> employeeDaysOffToList = new ArrayList<>();
+        // карта сотрудников со списком приема и увольнения
         Map<Integer, List<Worked>> allEmployeeWorked = workedRepository.getAllEmployeeBetween(startDate, endDate);
-        Map<Integer, Map<LocalDate, DayOff>> allEmployeeDayOff = daysOffRepository.getAllEmployeeBetween(startDate, endDate);
+        // карта сотрудников с картой выходных дней
+        Map<Integer, Map<LocalDate, DayOffTo>> allEmployeeDayOffTo = daysOffRepository.getAllEmployeeBetween(startDate, endDate);
 
-//        allEmployeeWorked.forEach((i, v) -> System.out.println(i + "=>" + v));
-//        System.out.println("=======");
-//        allEmployeeDayOff.forEach((i, v) -> System.out.println(i + "=>" + v));
-//        System.out.println("=======");
-
-        new ConcurrentHashMap<>(allEmployeeDayOff).forEach((employeeId, v) -> {
-            List<Worked> workers = allEmployeeWorked.get(employeeId);
-            if (workers != null) {
-//                System.out.println("1=" + employeeId + "=>" + workers);
-                v.values().stream().sorted(Comparator.comparing(DayOff::getDate))
-                        .forEach(dayOff ->
-                    workers.stream()
-                            .sorted(Comparator.comparing(Worked::getRecruitment))
-                            .forEach(worked -> {
-                                // Recruitment - прием на работу
-                                // Dismissal   - увольнение
-                                if (dayOff.getWorked() == null || !dayOff.getWorked()) {
-                                    Map<LocalDate, DayOff> dayOffMap = new ConcurrentHashMap<>(allEmployeeDayOff.get(employeeId));
-                                    dayOffMap.get(dayOff.getDate()).setWorked(worked.getRecruitment() != null && worked.getRecruitment().isBefore(dayOff.getDate().plusDays(1))
-                                            && (worked.getDismissal() == null || worked.getDismissal().isAfter(dayOff.getDate().minusDays(1))));
-                                    allEmployeeDayOff.put(employeeId, dayOffMap);
-                                }
-                            })
-                );
+        allEmployeeWorked.forEach((employeeId, workers) -> {
+            if (!allEmployeeDayOffTo.containsKey(employeeId)) {
+                Map<LocalDate, DayOffTo> dasOffTo = new ConcurrentHashMap<>();
+                for (LocalDate date = startDate; date.isBefore(endDate.plusDays(1)); date = date.plusDays(1)) {
+                    dasOffTo.put(date, new DayOffTo(date));
+                }
+                allEmployeeDayOffTo.put(employeeId, dasOffTo);
             }
+            Map<LocalDate, DayOffTo> datesDayOffTo = allEmployeeDayOffTo.get(employeeId);
+            workers.forEach(worked -> {
+                LocalDate startLocalDate = worked.getRecruitment().isBefore(startDate) ? startDate : worked.getRecruitment();
+                LocalDate endLocalDate = Objects.requireNonNullElse(worked.getDismissal(), endDate).isAfter(endDate.minusDays(1)) ? endDate : worked.getDismissal();
+                for (LocalDate date = startLocalDate; date.isBefore(endLocalDate.plusDays(1)); date = date.plusDays(1)) {
+                    datesDayOffTo.get(date).setWorked(true);
+                }
+            });
+
         });
 
-//        allEmployeeDayOff.forEach((i, v) -> System.out.println(i + "=>" + v));
-//        System.out.println("=======");
+        allEmployeeDayOffTo.forEach((i, v) -> {
+            System.out.println(i + "=>" + v);
+        });
 
+        Collection<EmployeeDaysOffTo> employeeDaysOffToList = new ArrayList<>();
         List<Employee> employees = employeeRepository.getAll();
         employees.forEach(employee -> {
             if (allEmployeeWorked.containsKey(employee.getId())) {
@@ -77,12 +73,11 @@ public class DayOffService {
                         .sorted(Comparator.comparing(Worked::getRecruitment).reversed())
                         .findFirst().orElse(new Worked());
                 EmployeeTo employeeTo = Util.getEmployeeTo(employee, last);
-                List<DayOff> daysOff = allEmployeeDayOff.get(employee.getId()).values().stream()
-                        .sorted(Comparator.comparing(DayOff::getDate)).toList();
+                List<DayOffTo> daysOff = allEmployeeDayOffTo.get(employee.getId()).values().stream()
+                        .sorted(Comparator.comparing(DayOffTo::getDate)).toList();
                 employeeDaysOffToList.add(new EmployeeDaysOffTo(employeeTo, daysOff));
             }
         });
-
         return employeeDaysOffToList;
     }
 }

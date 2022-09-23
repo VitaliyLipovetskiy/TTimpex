@@ -221,7 +221,7 @@ function save() {
     dataForm.recruitment = data.find(v => v.name === 'recruitment').value;
     dataForm.dismissal = data.find(v => v.name === 'dismissal').value;
 
-    // console.log(dataForm);
+    console.log(dataForm);
 
     $.ajax({
         type: "POST",

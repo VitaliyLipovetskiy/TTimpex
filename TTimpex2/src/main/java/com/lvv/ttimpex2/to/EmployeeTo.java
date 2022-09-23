@@ -13,7 +13,7 @@ import java.time.LocalTime;
  * @author Vitalii Lypovetskyi
  */
 public class EmployeeTo {
-    private int id;
+    private Integer id;
     private String firstName;
     private String lastName;
     private String middleName;
@@ -30,7 +30,7 @@ public class EmployeeTo {
 
     public EmployeeTo() {}
 
-    public EmployeeTo(int id, String firstName, String lastName, String middleName, Department department, String cardId, LocalDate recruitment, LocalDate dismissal, LocalTime startTime, LocalTime endTime) {
+    public EmployeeTo(Integer id, String firstName, String lastName, String middleName, Department department, String cardId, LocalDate recruitment, LocalDate dismissal, LocalTime startTime, LocalTime endTime) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -44,15 +44,15 @@ public class EmployeeTo {
         this.endTime = endTime;
     }
 
-    public EmployeeTo(int id, Department department, String cardId, String firstName, String lastName, String middleName) {
+    public EmployeeTo(Integer id, Department department, String cardId, String firstName, String lastName, String middleName) {
         this(id, firstName, lastName, middleName, department, cardId, null, null, null, null);
     }
 
-    public EmployeeTo(int id, String firstName, String lastName, String middleName) {
+    public EmployeeTo(Integer id, String firstName, String lastName, String middleName) {
         this(id, firstName, lastName, middleName, null, null, null, null, null, null);
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -126,7 +126,7 @@ public class EmployeeTo {
         this.dismissal = dismissal;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

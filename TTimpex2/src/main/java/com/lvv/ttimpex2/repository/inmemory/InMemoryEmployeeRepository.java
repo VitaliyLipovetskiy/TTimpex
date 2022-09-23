@@ -39,4 +39,8 @@ public class InMemoryEmployeeRepository extends InMemoryBaseRepository<Employee>
         return new ArrayList<>(map.values());
     }
 
+    @Override
+    public Employee save(Employee entity) {
+        return super.save(entity);
+    }
 }

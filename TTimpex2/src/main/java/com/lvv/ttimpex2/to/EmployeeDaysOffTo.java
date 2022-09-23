@@ -1,35 +1,32 @@
 package com.lvv.ttimpex2.to;
 
-import com.lvv.ttimpex2.molel.DayOff;
-
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author Vitalii Lypovetskyi
  */
 public class EmployeeDaysOffTo {
     private final EmployeeTo employeeTo;
-    private final List<DayOff> daysOff;
+    private final List<DayOffTo> daysOffTo;
 
-    public EmployeeDaysOffTo(EmployeeTo employeeTo, List<DayOff> daysOff) {
+    public EmployeeDaysOffTo(EmployeeTo employeeTo, List<DayOffTo> daysOff) {
         this.employeeTo = employeeTo;
-        this.daysOff = daysOff;
+        this.daysOffTo = daysOff;
     }
 
     public EmployeeTo getEmployeeTo() {
         return employeeTo;
     }
 
-    public List<DayOff> getDaysOff() {
-        return daysOff;
+    public List<DayOffTo> getDaysOffTo() {
+        return daysOffTo;
     }
 
     @Override
     public String toString() {
         return "EmployeeDaysOffTo{" +
                 "employeeTo=" + employeeTo.getId() +
-                ", dayOff=" + daysOff +
+                ", dayOff=" + daysOffTo +
                 '}';
     }
 }

@@ -36,6 +36,7 @@ public class EmployeeService {
     }
 
     public EmployeeTo get(int id) {
+        workedRepository.getHistory(id).forEach(System.out::println);
         return Util.getEmployeeTo(employeeRepository.get(id), workedRepository.getLast(id));
     }
 

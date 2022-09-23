@@ -160,9 +160,9 @@ function initTableByData() {
                                 // console.log(row.employeeTo.id);
                                 // console.log(meta.col - 2);
                                 // console.log(row);
-                                // console.log(row.daysOff[meta.col - 3].dayOff);
-                                let dayOff = row.daysOff[meta.col - 3].dayOff;
-                                let worked = row.daysOff[meta.col - 3].worked;
+                                // console.log(row.daysOffTo);
+                                let dayOff = row.daysOffTo[meta.col - 3].dayOff;
+                                let worked = row.daysOffTo[meta.col - 3].worked;
                                 return "<div class='align-middle text-center cell-choice'>" +
                                     "<input type='checkbox' " + (!worked || dayOff ? "checked" : "") + (!worked ? " disabled" : "") +
                                     " onclick='choiceDayOff($(this)," + row.employeeTo.id + ", " + (meta.col - 2) +");'/></div>";
@@ -175,7 +175,7 @@ function initTableByData() {
                             // console.log(rowData);
                             // console.log(row);
                             // console.log(col);
-                            if (!rowData.daysOff[col - 3].worked) {
+                            if (!rowData.daysOffTo[col - 3].worked) {
                                 $(td).css('background-color', '#e0c749');
                             }
                             if ('сб вс'.includes(columnTos[col-3].dayOfWeek)) {

@@ -3,6 +3,7 @@ package com.lvv.ttimpex2.controller;
 import com.lvv.ttimpex2.molel.Employee;
 import com.lvv.ttimpex2.molel.Worked;
 import com.lvv.ttimpex2.repository.WorkedRepository;
+import com.lvv.ttimpex2.service.DayOffService;
 import com.lvv.ttimpex2.service.EmployeeService;
 import com.lvv.ttimpex2.to.EmployeeTo;
 import com.lvv.ttimpex2.utils.Util;
@@ -26,10 +27,12 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
     private final WorkedRepository workedRepository;
+    private final DayOffService dayOffService;
 
-    public EmployeeController(EmployeeService employeeService, WorkedRepository workedRepository) {
+    public EmployeeController(EmployeeService employeeService, WorkedRepository workedRepository, DayOffService dayOffService) {
         this.employeeService = employeeService;
         this.workedRepository = workedRepository;
+        this.dayOffService = dayOffService;
     }
 
     @GetMapping
@@ -70,9 +73,11 @@ public class EmployeeController {
 //            checkNotFoundWithId(repository.save(meal, userId), meal.id());
             employeeService.save(employee);
         }
+        employeeTo.setId(employee.getId());
         Worked worked = Util.createWorked(employeeTo);
-        log.info("createOrUpdate " + worked);
+        log.info("createOrUpdate Worked " + worked);
         workedRepository.save(worked);
+
     }
 
 }

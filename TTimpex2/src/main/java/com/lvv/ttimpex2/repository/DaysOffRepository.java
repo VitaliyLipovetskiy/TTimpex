@@ -1,6 +1,7 @@
 package com.lvv.ttimpex2.repository;
 
 import com.lvv.ttimpex2.molel.DayOff;
+import com.lvv.ttimpex2.to.DayOffTo;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,11 +20,11 @@ public interface DaysOffRepository {
 //
 //    Employee get(int id);
 //
-    List<DayOff> getAll(int employeeId);
+//    List<DayOff> getAll(int employeeId);
 
-    List<DayOff> getBetween(LocalDate startDate, LocalDate endDate, int employeeId);
+//    List<DayOff> getBetween(LocalDate startDate, LocalDate endDate, int employeeId);
 
-    Map<Integer, Map<LocalDate, DayOff>> getAllEmployeeBetween(LocalDate startDate, LocalDate endDate);
+    Map<Integer, Map<LocalDate, DayOffTo>> getAllEmployeeBetween(LocalDate startDate, LocalDate endDate);
 
     void update(int employeeId, DayOff dayOff);
 }

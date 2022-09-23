@@ -1,14 +1,18 @@
 package com.lvv.ttimpex2.repository.inmemory;
 
+import com.lvv.ttimpex2.molel.Employee;
 import com.lvv.ttimpex2.molel.Worked;
+import com.lvv.ttimpex2.repository.EmployeeRepository;
 import com.lvv.ttimpex2.repository.WorkedRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -18,6 +22,8 @@ import java.util.stream.Collectors;
 public class InMemoryWorkedRepository implements WorkedRepository {
 
     private final Map<Integer, List<Worked>> repository = new ConcurrentHashMap<>();
+    @Autowired
+    private InMemoryEmployeeRepository employeeRepository;
 
     private static final Logger log = LoggerFactory.getLogger(InMemoryWorkedRepository.class);
 
@@ -39,8 +45,12 @@ public class InMemoryWorkedRepository implements WorkedRepository {
     @Override
     public boolean save(Worked worked) {
         Integer employeeId = worked.getEmployee().getId();
+        if (!repository.containsKey(employeeId)) {
+            repository.put(employeeId, new ArrayList<>());
+        }
         List<Worked> workers = new ArrayList<>(repository.get(employeeId));
-        System.out.println("workers " + workers);
+        System.out.println("workers 1 InMemoryWorkedRepository save");
+        workers.forEach(System.out::println);
         Worked lastWorked = workers.stream()
                 .filter(worker -> worker.getDismissal() == null)
                 .sorted(Comparator.comparing(Worked::getRecruitment).reversed())
@@ -49,18 +59,23 @@ public class InMemoryWorkedRepository implements WorkedRepository {
         if (lastWorked == null || lastWorked.getRecruitment() == null && lastWorked.getDismissal() == null) {
             if (worked.getRecruitment() == null) {
                 System.out.println(1);
-                return false;
+                workers.add(worked);
+                repository.put(employeeId, workers);
+                return true;
             } else {
                 if (lastWorked == null) {
                     System.out.println(2);
                     workers.add(worked);
                     repository.put(employeeId, workers);
+                    System.out.println("workers 2 InMemoryWorkedRepository save");
+                    workers.forEach(System.out::println);
                     return true;
                 } else {
                     System.out.println(3);
                     workers.set(workers.indexOf(lastWorked), worked);
                     repository.put(employeeId, workers);
-                    System.out.println("workers " + workers);
+                    System.out.println("workers 3 InMemoryWorkedRepository save");
+                    workers.forEach(System.out::println);
                     return true;
                 }
             }
@@ -69,7 +84,8 @@ public class InMemoryWorkedRepository implements WorkedRepository {
                 System.out.println(4);
                 workers.set(workers.indexOf(lastWorked), worked);
                 repository.put(employeeId, workers);
-                System.out.println("workers " + workers);
+                System.out.println("workers 4 InMemoryWorkedRepository save");
+                workers.forEach(System.out::println);
                 return true;
             } else {
                 System.out.println("Исправление даты приема пока нет");
@@ -143,6 +159,7 @@ public class InMemoryWorkedRepository implements WorkedRepository {
 
     @Override
     public List<Worked> getHistory(int id) {
-        return new ArrayList<>(repository.get(id).stream().sorted(Comparator.comparing(Worked::getRecruitment)).toList());
+        return new ArrayList<>(repository.get(id).stream()
+                .sorted(Comparator.comparing(Worked::getRecruitment)).toList());
     }
 }
