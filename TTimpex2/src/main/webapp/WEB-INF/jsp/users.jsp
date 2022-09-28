@@ -20,7 +20,7 @@
         <%--            <thead>--%>
         <%--            <tr class="text-center">--%>
         <%--                <th class="align-middle text-center"><spring:message code="employee.name"/></th>--%>
-        <%--                <th class="align-middle text-center"><spring:message code="employee.card"/></th>--%>
+        <%--                <th class="align-middle text-center"><spring:message code="employee.cardOld"/></th>--%>
         <%--                <th class="align-middle text-center"><spring:message code="employee.department"/></th>--%>
         <%--                <th class="align-middle text-center" style="width: 50px"><spring:message code="employee.startTime"/></th>--%>
         <%--                <th class="align-middle text-center" style="width: 50px"><spring:message code="employee.endTime"/></th>--%>

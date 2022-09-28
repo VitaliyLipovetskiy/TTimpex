@@ -5,11 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Immutable;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * @author Vitalii Lypovetskyi
@@ -17,39 +15,32 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+//@Entity
 @Immutable
-@Table(name = "timestamp", schema = "timestamp")
+//@Table(name = "timestamp", schema = "timestamp")
 public final class TimeStamp {
-    @Id
-    @Column
     private String id;
-    @Column(name = "date_time")
-    @NotNull
-    private LocalDateTime dateTime;
-    @Column
-    @NotNull
+    private Employee employee;
+    private LocalDate date;
+    private LocalTime time;
     private int post;
-    @Column
-    @NotNull
-    @Size(min = 4, max = 4)
-    private String card;
-    @Column
-    @NotNull
     private int event;
-//    @ManyToOne(cascade = CascadeType.REFRESH)
-//    @JoinColumn(name = "card", insertable=false, updatable=false, nullable = true)
-//    private Card cardCard;
 
-//    public TimeStamp(String id, LocalDateTime dateTime, int post, String card, int event) {
-//        this.id = id;
-//        this.dateTime = dateTime;
-//        this.post = post;
-//        this.card = card;
-//        this.event = event;
-//    }
+    public TimeStamp(Employee employee, LocalTime time, int post, int event) {
+        this.employee = employee;
+        this.date = LocalDate.now();
+        this.time = time;
+        this.post = post;
+        this.event = event;
+        this.id = "" + employee.getCardId() + post + event + this.date + time;
+    }
 
-    public LocalDate getLocalDate() {
-        return dateTime.toLocalDate();
+    public TimeStamp(Employee employee, LocalDateTime dateTime, int post, int event) {
+        this.employee = employee;
+        this.date = dateTime.toLocalDate();
+        this.time = dateTime.toLocalTime();
+        this.post = post;
+        this.event = event;
+        this.id = "" + employee.getCardId() + post + event + this.date + this.time;
     }
 }

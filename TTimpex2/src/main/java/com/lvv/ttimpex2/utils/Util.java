@@ -1,8 +1,11 @@
 package com.lvv.ttimpex2.utils;
 
 import com.lvv.ttimpex2.molel.*;
+import com.lvv.ttimpex2.molel.old.CardOld;
+import com.lvv.ttimpex2.molel.old.SCodeOld;
+import com.lvv.ttimpex2.molel.old.TimeStampOld;
 import com.lvv.ttimpex2.to.EmployeeTo;
-import com.lvv.ttimpex2.to.TimeStampTo;
+import com.lvv.ttimpex2.to.old.TimeStampOldTo;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,11 +18,11 @@ import java.util.function.Predicate;
 public class Util {
     private Util() {}
 
-    public static List<TimeStampTo> getTos(Collection<TimeStamp> timeStamps) {
+    public static List<TimeStampOldTo> getTos(Collection<TimeStampOld> timeStampsOld) {
         return null;
     }
 
-    private static List<TimeStampTo> filterByPredicate(Collection<TimeStamp> timeStamps, Card card, SCode sCode, Predicate<TimeStamp> filter) {
+    private static List<TimeStampOldTo> filterByPredicate(Collection<TimeStampOld> timeStampsOld, CardOld cardOld, SCodeOld sCodeOld, Predicate<TimeStampOld> filter) {
         return null;
     }
 
@@ -38,13 +41,8 @@ public class Util {
         return filterByPredicate(employees, workedMap, employeeTo -> employeeTo.getRecruitment() != null);
     }
 
-    public static Employee createEmployee(EmployeeTo empTo) {
-        return new Employee(empTo.getId(), empTo.getFirstName(), empTo.getLastName(), empTo.getMiddleName(),
-                empTo.getDepartment(), empTo.getCardId(), empTo.getStartTime(), empTo.getEndTime());
-    }
-
     public static Worked createWorked(EmployeeTo empTo) {
-        return new Worked(createEmployee(empTo), empTo.getRecruitment(), empTo.getDismissal());
+        return new Worked(new Employee(empTo), empTo.getRecruitment(), empTo.getDismissal());
     }
 
     private static List<EmployeeTo> filterByPredicate(Collection<Employee> employees, Map<Integer, Worked> workedMap, Predicate<EmployeeTo> filter) {
@@ -62,11 +60,11 @@ public class Util {
 
     private static EmployeeTo createEmployeeTo(Employee emp) {
         return new EmployeeTo(emp.getId(), emp.getFirstName(), emp.getLastName(), emp.getMiddleName(), emp.getDepartment(), emp.getCardId(),
-                null, null, emp.getStartTime(), emp.getEndTime());
+                null, null, emp.getStartTime(), emp.getEndTime(), emp.getAccountingForHoursWorked());
     }
 
-    private static TimeStampTo createTo(TimeStamp timeStamp, Card card, SCode sCode) {
-        return new TimeStampTo(timeStamp.getId(), timeStamp.getDateTime(), timeStamp.getPost(), timeStamp.getEvent(), card, sCode);
+    private static TimeStampOldTo createTo(TimeStampOld timeStampOld, CardOld cardOld, SCodeOld sCodeOld) {
+        return new TimeStampOldTo(timeStampOld.getId(), timeStampOld.getDateTime(), timeStampOld.getPost(), timeStampOld.getEvent(), cardOld, sCodeOld);
     }
 
 }

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -14,20 +13,18 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "s_code", schema = "timestamp")
+//@Entity
+//@Table(name = "s_code", schema = "timestamp")
 public final class SCode {
-    @Id
-    @Column(name = "card")
+//    @Id
+//    @Column(name = "card")
     @NotNull
     @Size(min = 4, max = 4)
     private String id;
     @NotNull
     @Size(min = 8, max = 8)
-    @Column(name = "s_code")
+//    @Column(name = "s_code")
     private String sCode;
-//    @OneToOne(mappedBy = "card", cascade = CascadeType.ALL)
-//    private
 
     @Override
     public String toString() {
@@ -43,3 +40,4 @@ public final class SCode {
     //            CONSTRAINT PK_TRZ_SC PRIMARY KEY ()
     //    );
 }
+

@@ -1,13 +1,11 @@
 package com.lvv.ttimpex2.service;
 
-import com.lvv.ttimpex2.repository.TimeStampRepository;
+import com.lvv.ttimpex2.repository.old.DataJpaTimeStampOldRepository;
 import com.lvv.ttimpex2.service.handlers.ParadoxHandler;
-import com.lvv.ttimpex2.service.handlers.TimeStampHandler;
+import com.lvv.ttimpex2.service.handlers.TimeStampOldHandler;
 import com.lvv.ttimpex2.utils.UtilsDB;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,11 +25,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * @author Vitalii Lypovetskyi
  */
-@Service
+//@Service
 public final class ParadoxService {
 
 //    private final JdbcTemplate jdbcTemplate;
-    private final TimeStampRepository timeStampRepository;
+    private final DataJpaTimeStampOldRepository dataJpaTimeStampOldRepository;
     private LocalDate localDate;
     private LocalTime lastExecutionTime;
     private String fileDB;
@@ -42,8 +40,8 @@ public final class ParadoxService {
     private final Properties externalProperties = new Properties();
     private static final Logger LOG = getLogger(ParadoxService.class);
 
-    public ParadoxService(TimeStampRepository timeStampRepository) {
-        this.timeStampRepository = timeStampRepository;
+    public ParadoxService(DataJpaTimeStampOldRepository dataJpaTimeStampOldRepository) {
+        this.dataJpaTimeStampOldRepository = dataJpaTimeStampOldRepository;
 //        checkHandling();
     }
 
@@ -120,12 +118,12 @@ public final class ParadoxService {
                     Path pathDB = Paths.get( path + fileDB + ".DB");
                     LOG.warn("pathDB={}", pathDB);
                     if (Files.exists(pathDB)) {
-                        tableParadoxHandler(pathDB, new TimeStampHandler(timeStampRepository));
+                        tableParadoxHandler(pathDB, new TimeStampOldHandler(dataJpaTimeStampOldRepository));
                     } else {
                         LOG.error("Files.notExists {}", pathDB);
                     }
-                    LOG.warn("sleep={} DateTime={} {} fileDB={} count={}",
-                            sleep, localDate, lastExecutionTime, fileDB, timeStampRepository.count());
+//                    LOG.warn("sleep={} DateTime={} {} fileDB={} count={}",
+//                            sleep, localDate, lastExecutionTime, fileDB, dataJpaTimeStampRepository.count());
                     try {
                         Thread.sleep(sleep);
                     } catch (InterruptedException e) {

@@ -28,8 +28,10 @@ public class InMemoryWorkedRepository implements WorkedRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryWorkedRepository.class);
 
     {
-        repository.put(11, List.of(new Worked(LocalDate.of(2021, 12, 1), LocalDate.of(2022, 9, 5)),
-                new Worked(LocalDate.of(2022, 9,15))));
+        repository.put(11, List.of(new Worked(LocalDate.of(2021, 12, 1)
+//                        , LocalDate.of(2022, 9, 5)),
+//                new Worked(LocalDate.of(2022, 9,15)
+                )));
         repository.put(12, List.of(new Worked()));
         repository.put(13, List.of());//new Worked(LocalDate.of(2021, 12, 1)));
         repository.put(14, List.of(new Worked(LocalDate.of(2021, 12, 1), LocalDate.of(2022, 6,30))));
@@ -37,9 +39,11 @@ public class InMemoryWorkedRepository implements WorkedRepository {
         repository.put(16, List.of(new Worked(LocalDate.of(2021, 12, 1))));
         repository.put(17, List.of(new Worked(LocalDate.of(2021, 12, 1))));
         repository.put(18, List.of(new Worked(LocalDate.of(2021, 12, 1))));
-        repository.put(19, List.of(new Worked(LocalDate.of(2022, 8, 1), LocalDate.of(2022, 9, 2)),
-                new Worked(LocalDate.of(2022,9, 12), LocalDate.of(2022, 9, 14)),
-                new Worked(LocalDate.of(2022, 9, 21))));
+        repository.put(19, List.of(new Worked(LocalDate.of(2022, 8, 1)
+//                        , LocalDate.of(2022, 9, 2)),
+//                new Worked(LocalDate.of(2022,9, 12), LocalDate.of(2022, 9, 14)),
+//                new Worked(LocalDate.of(2022, 9, 21)
+                )));
     }
 
     @Override

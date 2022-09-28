@@ -20,10 +20,11 @@
             <thead>
             <tr class="text-center">
                 <th class="align-middle text-center"><spring:message code="employee.name"/></th>
-                <th class="align-middle text-center"><spring:message code="employee.card"/></th>
+                <th class="align-middle text-center"><spring:message code="employee.cardOld"/></th>
                 <th class="align-middle text-center"><spring:message code="employee.department"/></th>
                 <th class="align-middle text-center" style="width: 50px"><spring:message code="employee.startTime"/></th>
                 <th class="align-middle text-center" style="width: 50px"><spring:message code="employee.endTime"/></th>
+                <th class="align-middle text-center"><spring:message code="employee.timeTracking"/></th>
                 <th class="align-middle text-center"><spring:message code="employee.recruitment"/></th>
                 <th class="align-middle text-center"><spring:message code="employee.dismissal"/></th>
                 <th>
@@ -50,17 +51,12 @@
                     <input type="hidden" id="id" name="id">
 
                     <div class="container">
-                        <div class="row justify-content-around">
+                        <div class="row ">
                             <div class="form-group col-sm">
                                 <label for="lastName" class="col-form-label"><spring:message code="employee.lastName"/></label>
                                 <input type="text" class="form-control" id="lastName" name="lastName"
                                        placeholder="<spring:message code="employee.lastName"/>">
                             </div>
-
-<%--                            <div class="form-group col-sm-2">--%>
-<%--                                <label for="worked" class="col-form-label"><spring:message code="employee.worked"/></label>--%>
-<%--                                <input type="checkbox" class="form-check-input" id="worked" name="worked" onclick="changeWorked()">--%>
-<%--                            </div>--%>
                         </div>
                     </div>
 
@@ -90,9 +86,9 @@
                             </div>
 
                             <div class="form-group col-sm-4">
-                                <label for="card" class="col-form-label"><spring:message code="employee.card"/></label>
-                                <input type="email" class="form-control" id="card" name="cardId"
-                                       placeholder="<spring:message code="employee.card"/>">
+                                <label for="cardOld" class="col-form-label"><spring:message code="employee.cardOld"/></label>
+                                <input type="email" class="form-control" id="cardOld" name="cardId"
+                                       placeholder="<spring:message code="employee.cardOld"/>">
                             </div>
                         </div>
                     </div>
@@ -125,6 +121,15 @@
                                 <label for="dismissal" class="col-form-label"><spring:message code="employee.dismissal"/></label>
                                 <input type="date" class="form-control" id="dismissal" name="dismissal"
                                        placeholder="<spring:message code="employee.dismissal"/>">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-4 offset-md-1">
+                                <input type="checkbox" class="form-check-input" id="accountingForHoursWorked" name="accountingForHoursWorked" onclick="changeAccountingForHoursWorked()">
+                                <label for="accountingForHoursWorked" class="form-check-label"><spring:message code="employee.timeTracking"/></label>
                             </div>
                         </div>
                     </div>

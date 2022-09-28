@@ -13,8 +13,8 @@
     <div class="container-fluid">
         <h3 class="text-center"><spring:message code="employee.daysOff"/></h3>
 
-        <div class="card border-dark">
-            <div class="card-body pb-0">
+        <div class="cardOld border-dark">
+            <div class="cardOld-body pb-0">
                 <form id="filter">
                     <div class="row">
                         <div class="col-4">
@@ -24,7 +24,7 @@
                     </div>
                 </form>
             </div>
-<%--            <div class="card-footer text-right">--%>
+<%--            <div class="cardOld-footer text-right">--%>
 <%--                <button class="btn btn-danger" onclick="clearFilter()">--%>
 <%--                    <span class="fa fa-remove"></span>--%>
 <%--                    <spring:message code="common.cancel"/>--%>

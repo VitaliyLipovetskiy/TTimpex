@@ -6,6 +6,7 @@ import com.lvv.ttimpex2.repository.WorkedRepository;
 import com.lvv.ttimpex2.to.EmployeeTo;
 import com.lvv.ttimpex2.utils.Util;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
  * @author Vitalii Lypovetskyi
  */
 @Service
+@Transactional(readOnly = true)
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final WorkedRepository workedRepository;
@@ -40,6 +42,7 @@ public class EmployeeService {
         return Util.getEmployeeTo(employeeRepository.get(id), workedRepository.getLast(id));
     }
 
+    @Transactional
     public Employee save(Employee employee) {
         return employeeRepository.save(employee);
     }

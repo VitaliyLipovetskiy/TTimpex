@@ -17,7 +17,7 @@ import java.util.List;
  */
 //@ApiIgnore
 @RestController
-@RequestMapping(value = "api/ts", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "api/ts1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ReportController {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

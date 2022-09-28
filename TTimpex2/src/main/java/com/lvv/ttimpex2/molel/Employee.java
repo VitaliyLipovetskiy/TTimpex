@@ -1,14 +1,20 @@
 package com.lvv.ttimpex2.molel;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.lvv.ttimpex2.to.EmployeeTo;
 import com.lvv.ttimpex2.utils.json.DepartmentDeserializer;
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.Entity;
 import java.time.LocalTime;
 
 /**
  * @author Vitalii Lypovetskyi
  */
-public class Employee extends AbstractBaseEntity implements HasId {
+@Data
+//@Entity
+public class Employee extends AbstractBaseEntity {
     private String firstName;
     private String lastName;
     private String middleName;
@@ -19,12 +25,14 @@ public class Employee extends AbstractBaseEntity implements HasId {
     private LocalTime startTime; // согласованное время начала раб дня
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalTime endTime; // согласованное время окончания раб дня
+    private Boolean accountingForHoursWorked;
 
     public Employee() {
         super();
     }
 
-    public Employee(Integer id, String firstName, String lastName, String middleName, Department department, String cardId, LocalTime startTime, LocalTime endTime) {
+    public Employee(Integer id, String firstName, String lastName, String middleName, Department department,
+                    String cardId, LocalTime startTime, LocalTime endTime, Boolean accountingForHoursWorked) {
         super(id);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -33,11 +41,18 @@ public class Employee extends AbstractBaseEntity implements HasId {
         this.cardId = cardId;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.accountingForHoursWorked = accountingForHoursWorked;
     }
 
     public Employee(Integer id, String name, Department department, String cardId, LocalTime startTime, LocalTime endTime) {
-        this(null, null, null, null, department, cardId, startTime, endTime);
+        this(null, null, null, null, department, cardId, startTime, endTime, false);
         setNames(name);
+    }
+
+    public Employee(String name, Department department, String cardId, LocalTime startTime, LocalTime endTime, Boolean accountingForHoursWorked) {
+        this(null, null, department, cardId, startTime, endTime);
+        setNames(name);
+        setAccountingForHoursWorked(accountingForHoursWorked);
     }
 
     public Employee(String name, Department department, String cardId, LocalTime startTime, LocalTime endTime) {
@@ -50,7 +65,11 @@ public class Employee extends AbstractBaseEntity implements HasId {
     }
 
     public Employee(String name, Department department, String cardId) {
-        this(null, name, department, cardId, null, null);
+        this(name, department, cardId, null, null);
+    }
+
+    public Employee(String name, Department department, String cardId, Boolean accountingForHoursWorked) {
+        this(name, department, cardId, null, null, accountingForHoursWorked);
     }
 
     public Employee(Integer id, String name) {
@@ -69,30 +88,10 @@ public class Employee extends AbstractBaseEntity implements HasId {
         this(id, name, null, cardId, null, null);
     }
 
-    public String getFirstName() {
-        return firstName;
+    public Employee(EmployeeTo empTo) {
+        this(empTo.getId(), empTo.getFirstName(), empTo.getLastName(), empTo.getMiddleName(),
+                empTo.getDepartment(), empTo.getCardId(), empTo.getStartTime(), empTo.getEndTime(), empTo.getAccountingForHoursWorked());
     }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
     public void setNames(String name) {
         if (name == null) return;
         String[] names = name.split(" ");
@@ -107,40 +106,8 @@ public class Employee extends AbstractBaseEntity implements HasId {
         }
     }
 
-    public Department getDepartment() {
-        return department;
-    }
-
     public String getNameDepartment() {
         return department == null ? null : department.getName();
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
-
-    public String getCardId() {
-        return cardId;
-    }
-
-    public void setCardId(String cardId) {
-        this.cardId = cardId;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
     }
 
     @Override

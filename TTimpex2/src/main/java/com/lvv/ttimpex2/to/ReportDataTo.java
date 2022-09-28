@@ -8,20 +8,18 @@ import java.util.List;
 public class ReportDataTo {
     private final int id;
     private final String name;
-    private final Boolean choice;
     private final Boolean accountingForHoursWorked;
-    private final Integer fine;  // штраф
-    private final Double worked; // отработано в днях
-    private final List<DayTo> dayTos;
+    private final Integer penalty;  // штраф
+    private final Double workedOut; // отработано в днях
+    private final List<DayTo> daysTo;
 
-    public ReportDataTo(int id, String name, Boolean choice, Boolean accountingForHoursWorked, Integer fine, Double worked, List<DayTo> dayTos) {
+    public ReportDataTo(int id, String name, Boolean accountingForHoursWorked, Integer penalty, Double workedOut, List<DayTo> daysTo) {
         this.id = id;
         this.name = name;
-        this.choice = choice;
         this.accountingForHoursWorked = accountingForHoursWorked;
-        this.fine = fine;
-        this.worked = worked;
-        this.dayTos = dayTos;
+        this.penalty = penalty;
+        this.workedOut = workedOut;
+        this.daysTo = daysTo;
     }
 
     public int getId() {
@@ -32,24 +30,20 @@ public class ReportDataTo {
         return name;
     }
 
-    public List<DayTo> getDayTos() {
-        return dayTos;
+    public List<DayTo> getDaysTo() {
+        return daysTo;
     }
 
     public Boolean getAccountingForHoursWorked() {
         return accountingForHoursWorked;
     }
 
-    public Boolean getChoice() {
-        return choice;
+    public Integer getPenalty() {
+        return penalty;
     }
 
-    public Integer getFine() {
-        return fine;
-    }
-
-    public Double getWorked() {
-        return worked;
+    public Double getWorkedOut() {
+        return workedOut;
     }
 
     @Override
@@ -57,7 +51,7 @@ public class ReportDataTo {
         return "ReportTo{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", dayTos=" + dayTos +
+                ", daysTo=" + daysTo +
                 '}';
     }
 }

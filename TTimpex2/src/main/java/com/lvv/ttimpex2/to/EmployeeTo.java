@@ -27,10 +27,11 @@ public class EmployeeTo {
     private LocalDate dismissal;       // Увольнение
     private LocalTime startTime; // согласованное время начала раб дня
     private LocalTime endTime;   // согласованное время окончания раб дня
+    private Boolean accountingForHoursWorked;
 
     public EmployeeTo() {}
 
-    public EmployeeTo(Integer id, String firstName, String lastName, String middleName, Department department, String cardId, LocalDate recruitment, LocalDate dismissal, LocalTime startTime, LocalTime endTime) {
+    public EmployeeTo(Integer id, String firstName, String lastName, String middleName, Department department, String cardId, LocalDate recruitment, LocalDate dismissal, LocalTime startTime, LocalTime endTime, Boolean accountingForHoursWorked) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -42,14 +43,15 @@ public class EmployeeTo {
         this.dismissal = dismissal;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.accountingForHoursWorked = accountingForHoursWorked;
     }
 
     public EmployeeTo(Integer id, Department department, String cardId, String firstName, String lastName, String middleName) {
-        this(id, firstName, lastName, middleName, department, cardId, null, null, null, null);
+        this(id, firstName, lastName, middleName, department, cardId, null, null, null, null, false);
     }
 
     public EmployeeTo(Integer id, String firstName, String lastName, String middleName) {
-        this(id, firstName, lastName, middleName, null, null, null, null, null, null);
+        this(id, firstName, lastName, middleName, null, null, null, null, null, null, false);
     }
 
     public Integer getId() {
@@ -160,6 +162,14 @@ public class EmployeeTo {
 
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
+    }
+
+    public Boolean getAccountingForHoursWorked() {
+        return accountingForHoursWorked;
+    }
+
+    public void setAccountingForHoursWorked(Boolean accountingForHoursWorked) {
+        this.accountingForHoursWorked = accountingForHoursWorked;
     }
 
     @Override

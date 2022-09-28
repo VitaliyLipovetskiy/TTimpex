@@ -1,11 +1,10 @@
-package com.lvv.ttimpex2.service;
+package com.lvv.ttimpex2.service.old;
 
-import com.lvv.ttimpex2.molel.Card;
-import com.lvv.ttimpex2.repository.CardRepository;
-import com.lvv.ttimpex2.service.handlers.CardHandler;
+import com.lvv.ttimpex2.molel.old.CardOld;
+import com.lvv.ttimpex2.repository.old.CardOldRepository;
+import com.lvv.ttimpex2.service.ParadoxService;
 import com.lvv.ttimpex2.utils.UtilsDB;
 import org.slf4j.Logger;
-import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,22 +18,22 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * @author Vitalii Lypovetskyi
  */
-@Service
+//@Service
 public final class CardService {
-    private final CardRepository repository;
+    private final CardOldRepository repository;
     private final Properties externalProperties = new Properties();
     private static final Logger LOG = getLogger(CardService.class);
 
-    public CardService(CardRepository repository) {
+    public CardService(CardOldRepository repository) {
         this.repository = repository;
     }
 
-    public List<Card> findAll() {
-        return repository.findAll();
+    public List<CardOld> findAll() {
+        return null;//repository.findAll();
     }
 
-    public Optional<Card> findById(String id) {
-        return repository.findById(id);
+    public Optional<CardOld> findById(String id) {
+        return null;//repository.findById(id);
     }
 
     public void checkCard() {

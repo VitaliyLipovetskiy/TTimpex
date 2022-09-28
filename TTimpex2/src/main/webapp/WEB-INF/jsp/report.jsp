@@ -12,9 +12,9 @@
 <div class="jumbotron pt-4">
     <div class="container-fluid">
         <h3 class="text-center"><spring:message code="app.title"/></h3>
-        <%--https://getbootstrap.com/docs/4.0/components/card/--%>
-        <div class="card border-dark">
-            <div class="card-body pb-0">
+        <%--https://getbootstrap.com/docs/4.0/components/cardOld/--%>
+        <div class="cardOld border-dark">
+            <div class="cardOld-body pb-0">
                 <form id="filter">
                     <div class="row">
                         <div class="col-2">
@@ -36,7 +36,7 @@
                     </div>
                 </form>
             </div>
-            <div class="card-footer text-right">
+            <div class="cardOld-footer text-right">
                 <button class="btn btn-danger" onclick="clearFilter()">
                     <span class="fa fa-remove"></span>
                     <spring:message code="common.cancel"/>
@@ -68,8 +68,39 @@
     </div>
 </div>
 
+<div class="modal fade" tabindex="-1" id="editRow">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle"></h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="closeNoty()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="detailsForm">
+                    <input type="hidden" id="id" name="id">
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeNoty()">
+                    <span class="fa fa-close"></span>
+                    <spring:message code="common.cancel"/>
+                </button>
+                <button type="button" class="btn btn-primary" onclick="save()">
+                    <span class="fa fa-check"></span>
+                    <spring:message code="common.save"/>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <br>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
-
+<jsp:include page="fragments/i18n.jsp">
+    <jsp:param name="page" value="timestamp"/>
+</jsp:include>
 </html>

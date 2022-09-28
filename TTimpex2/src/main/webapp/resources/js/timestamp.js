@@ -71,8 +71,23 @@ function getDT() {
             //     // );
             // } );
 
-
         }
+    });
+
+}
+
+function updateCell() {
+    $('#datatable').on('dblclick', 'td', function () {
+        if (ctx.datatableApi.column(this).index() < 3) return;
+        console.log(ctx.datatableApi.row(this).data());
+        // console.log(ctx.datatableApi.column(this).data());
+        console.log(ctx.datatableApi.cell(this).data());
+
+        // form.find(":input").val("");
+        $("#modalTitle").html(i18n["editTitle"]);
+
+
+        $('#editRow').modal();
     });
 }
 
@@ -120,13 +135,13 @@ function formColumns(data) {
                     //  $('td', row).eq(5).addClass('highlight');
                     //
                     let result = "<div class='align-middle cell-name'>" + data + "</div><div class='text-right cell-font-red'>";
-                    if (row.fine !== 0) {
-                        result += row.fine;
+                    if (row.penalty !== 0) {
+                        result += row.penalty;
                     } else {
                         result += "<br>";
                     }
-                    if (row.worked !== 0) {
-                        result += "</div><div class='text-right'>" + row.worked;
+                    if (row.workedOut !== 0) {
+                        result += "</div><div class='text-right'>" + row.workedOut;
                     }
                     return result+ "</div>";
                 }
@@ -138,11 +153,12 @@ function formColumns(data) {
         //   data: "name"
         // },
         {
-            data: "choice",
+            // data: "choice",
+            defaultContent: false,
             render: function (data, type, row) {
                 if (type === "display") {
-                    console.log(row);
-                    return "<div class='align-middle text-center cell-choice'><input type='checkbox' " + (data ? "checked" : "") + " onclick='choice($(this)," + row.id + ");'/></div>";//enable($(this)," + row.id + ");
+                    // console.log(row);
+                    return "<div class='align-middle text-center cell-choice'><input type='checkbox' " + (data ? "checked" : "") + " onclick='choice($(this));'/></div>";//enable($(this)," + row.id + ");
                 }
                 return data;
             },
@@ -155,67 +171,83 @@ function formColumns(data) {
         let day = columnTos[i];
         columns.push(
             {
-                data: "dayTos." + i,
+                data: "daysTo." + i,
                 title: '<div class="text-center">' + day.dayOfMonth + '<br>' + day.dayOfWeek + '</div>',
                 // title: '<div class="container text-primary"><div class="row"><div class="col">' + i + '<br>sa</div></div></div>',
                 orderable: false,
                 defaultContent: "",
                 render: function (data, type, row) {
+                    // console.log(data);
                     if (type === "display") {
                         // Приход
                         let result = '<div id="container"><div class="text-right cell-time';
-                        if (data.cameCorrectTime.length === 0) {
+                        if (data.comingCorrectTime == null) {
                             if (data.dayOff === true) {
-                                result += ' box cell-blue';
-                            } else if (data.cameAutoTime.length === 0) {
+                                result += ' box cell-dayoff';
+                            } else if (data.comingAutoTime == null) {
                                 result += ' box cell-red';
                             }
-                            result += '">' + data.cameAutoTime;
+                            result += '">';
+                            if (data.comingAutoTime != null) {
+                                result += data.comingAutoTime.substring(0,5);
+                            }
                         } else {
-                            result += ' correct-time">' + data.cameCorrectTime;
+                            result += ' correct-time">' + data.comingCorrectTime.substring(0,5);
                         }
                         result += '</div><div class="text-right cell-time';
                         // Уход
-                        if (data.exitCorrectTime.length === 0) {
+                        if (data.leavingCorrectTime == null) {
                             if (data.dayOff === true) {
-                                result += ' box cell-blue';
-                            } else if (data.exitAutoTime.length === 0) {
+                                result += ' box cell-dayoff';
+                            } else if (data.leavingAutoTime == null) {
                                 result += ' box cell-red';
                             }
-                            result += '">' + data.exitAutoTime;
+                            result += '">';
+                            if (data.leavingAutoTime != null) {
+                                result += data.leavingAutoTime.substring(0,5);
+                            }
                         } else {
-                            result += ' correct-time">' + data.exitCorrectTime;
+                            result += ' correct-time">' + data.leavingCorrectTime.substring(0,5);
                         }
-                        result += '</div></div><div id="container-fine" class="text-center cell-font-red">';
+                        result += '</div></div><div id="container-penalty" class="text-center cell-font-red">';
                         // Штрафы
-                        if (data.fine !== 0) {
-                            result += data.fine;
+                        if (data.penalty !== 0) {
+                            result += data.penalty;
                         }
                         // Отработанные часы
                         if (row.accountingForHoursWorked === true) {
                             result += '</div><div id="container-worked" class="text-center';
                             if (data.dayOff === true) {
-                                result += '">' + (data.worked === 0 ? '' : data.worked);
+                                result += '">' + (data.workedOut === 0 ? '' : data.workedOut);
                             } else {
-                                if (data.worked === 0) {
+                                if (data.workedOut === 0) {
                                     result += ' cell-font-red'
                                 }
-                                result += '">' + data.worked;
+                                result += '">' + data.workedOut;
                             }
                         }
                         return result + '</div>';
                     }
                     return data;
+                },
+                createdCell: function (td, cellData, rowData, row, col) {
+                    if (cellData.dayOff) {
+                        $(td).css('background-color', '#898989');
+                    }
+                    // if (!rowData.daysOffTo[col - 3].worked) {
+                    //     $(td).css('background-color', '#e0c749');
+                    // }
+                    if ('сб вс'.includes(columnTos[col-3].dayOfWeek)) {
+                        $(td).addClass('data-day-off');// .css('background-color', '#C0C0F3FF');
+                    }
                 }
             });
     }
     return columns;
 }
 
-function choice(chkbox, id) {
-    // console.log(id);
-    // console.log(ctx.datatableApi.cell((id - 1), 2));
-    ctx.datatableApi.cell((id - 1), 2).data(chkbox.is(":checked"));
+function choice(chkbox) {
+    ctx.datatableApi.cell(chkbox.closest('td')).data(chkbox.is(":checked"));
 
 //  https://stackoverflow.com/a/22213543/548473
 //     $.ajax({
@@ -230,8 +262,10 @@ function choice(chkbox, id) {
 //     });
 }
 
+
 $(function() {
 
     getDT();
+    updateCell();
 
 });

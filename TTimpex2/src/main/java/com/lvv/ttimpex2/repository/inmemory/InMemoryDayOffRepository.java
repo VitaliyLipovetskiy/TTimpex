@@ -21,7 +21,25 @@ import java.util.stream.Collectors;
 public class InMemoryDayOffRepository implements DaysOffRepository {
     private final Map<Integer, Map<LocalDate, DayOff>> map = new ConcurrentHashMap<>();
 
-//    @Override
+    public InMemoryDayOffRepository() {
+        map.put(11, Map.of(LocalDate.of(2022, 9,2), new DayOff(null, LocalDate.of(2022, 9,2), true),
+                LocalDate.of(2022, 9,3), new DayOff(null, LocalDate.of(2022, 9,3), true),
+                LocalDate.of(2022, 9,8), new DayOff(null, LocalDate.of(2022, 9,8), true),
+                LocalDate.of(2022, 9,9), new DayOff(null, LocalDate.of(2022, 9,9), true)
+        ));
+        map.put(18, Map.of(LocalDate.of(2022, 9,3), new DayOff(null, LocalDate.of(2022, 9,3), true),
+                LocalDate.of(2022, 9,4), new DayOff(null, LocalDate.of(2022, 9,4), true),
+                LocalDate.of(2022, 9,10), new DayOff(null, LocalDate.of(2022, 9,10), true),
+                LocalDate.of(2022, 9,11), new DayOff(null, LocalDate.of(2022, 9,11), true)
+        ));
+        map.put(19, Map.of(LocalDate.of(2022, 9,3), new DayOff(null, LocalDate.of(2022, 9,3), true),
+                LocalDate.of(2022, 9,4), new DayOff(null, LocalDate.of(2022, 9,4), true),
+                LocalDate.of(2022, 9,10), new DayOff(null, LocalDate.of(2022, 9,10), true),
+                LocalDate.of(2022, 9,11), new DayOff(null, LocalDate.of(2022, 9,11), true)
+        ));
+    }
+
+    //    @Override
 //    public List<DayOff> getAll(int employeeId) {
 //        return map.get(employeeId).values().stream().toList();
 //    }

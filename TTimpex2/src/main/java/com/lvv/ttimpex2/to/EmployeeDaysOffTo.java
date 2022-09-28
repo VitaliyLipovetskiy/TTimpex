@@ -1,6 +1,10 @@
 package com.lvv.ttimpex2.to;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author Vitalii Lypovetskyi
@@ -20,6 +24,11 @@ public class EmployeeDaysOffTo {
 
     public List<DayOffTo> getDaysOffTo() {
         return daysOffTo;
+    }
+
+    public Map<LocalDate, DayOffTo> getMapDaysOffTo() {
+        return daysOffTo.stream()
+                .collect(Collectors.toMap(DayOffTo::getDate, Function.identity()));
     }
 
     @Override

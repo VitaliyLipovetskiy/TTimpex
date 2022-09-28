@@ -1,14 +1,21 @@
 package com.lvv.ttimpex2.controller;
 
-import com.lvv.ttimpex2.molel.TimeStamp;
 import com.lvv.ttimpex2.service.TimeStampService;
-import com.lvv.ttimpex2.to.TimeStampTo;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.*;
+import com.lvv.ttimpex2.to.ColumnTo;
+import com.lvv.ttimpex2.to.ReportDataTo;
+import com.lvv.ttimpex2.to.ReportTo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.lang.Nullable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -16,48 +23,60 @@ import java.util.Map;
  * @author Vitalii Lypovetskyi
  */
 @RestController
-@RequestMapping("/rest")
-public final class TimeStampController {
+@RequestMapping(value = "api/ts", produces = MediaType.APPLICATION_JSON_VALUE)
+public class TimeStampController {
 
-    private TimeStampService service;
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
-    public TimeStampController(TimeStampService service) {
-        this.service = service;
+    private final TimeStampService timeStampService;
+
+    public TimeStampController(TimeStampService timeStampService) {
+        this.timeStampService = timeStampService;
     }
 
-    @GetMapping("/all/ww")
-    public List<TimeStamp> findAll1(@RequestParam Map<String,String> params) {
-        Sort order = Sort.by(Sort.Direction.DESC, "dateTime");
-        Map<String, String> filter = new HashMap<>();
-        filter.put("date", LocalDate.now().minusDays(1).toString());
-        int pageSize = Integer.parseInt(params.getOrDefault("pageSize", "100"));
-        int pageNumber = Integer.parseInt(params.getOrDefault("pageNumber", "0"));
-        return service.findAll(PageRequest.of(pageNumber, pageSize, order), filter).toList();
+//    @GetMapping
+    public Collection[] getFiltered(@RequestParam @Nullable Map<String, LocalDate> param) {
+        log.info("getFiltered {}", param);
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = LocalDate.of(today.getYear(), today.getMonthValue(), 1);
+        LocalDate endDate = LocalDate.of(today.getYear(), today.plusMonths(1).getMonthValue(), 1);
+        LocalDate localDate;
+        if (param != null) {
+            localDate = param.get("date");
+            if (localDate == null) {
+                startDate = param.getOrDefault("startDate", startDate);
+                endDate = param.getOrDefault("endDate", endDate);
+            } else {
+                startDate = localDate;
+                endDate = localDate;
+            }
+        }
+        List<ColumnTo> columnTos = new ArrayList<>();
+        startDate.datesUntil(endDate).forEach(date -> columnTos.add(new ColumnTo(date)));
+
+        return new Collection[] {columnTos, timeStampService.getFilteredForReport(startDate, endDate)};
     }
 
-    @GetMapping("/all/to")
-    public List<TimeStampTo> findAllTo(@RequestParam Map<String,String> params) {
-        Sort order = Sort.by(Sort.Direction.DESC, "dateTime");
-        Map<String, String> filter = new HashMap<>();
-        filter.put("date", LocalDate.now().minusDays(1).toString());
-        int pageSize = Integer.parseInt(params.getOrDefault("pageSize", "100"));
-        int pageNumber = Integer.parseInt(params.getOrDefault("pageNumber", "0"));
-        return service.findAllTo(PageRequest.of(pageNumber, pageSize, order), filter);
-    }
+    @GetMapping
+    public ReportTo getFiltered1(@RequestParam @Nullable Map<String, LocalDate> param) {
+        log.info("getFiltered {}", param);
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = LocalDate.of(today.getYear(), today.getMonthValue(), 1);
+        LocalDate endDate = LocalDate.of(today.getYear(), today.plusMonths(1).getMonthValue(), 1);
+        LocalDate localDate;
+        if (param != null) {
+            localDate = param.get("date");
+            if (localDate == null) {
+                startDate = param.getOrDefault("startDate", startDate);
+                endDate = param.getOrDefault("endDate", endDate);
+            } else {
+                startDate = localDate;
+                endDate = localDate;
+            }
+        }
+        List<ColumnTo> columnTos = new ArrayList<>();
+        startDate.datesUntil(endDate).forEach(date -> columnTos.add(new ColumnTo(date)));
 
-    @GetMapping("/all")
-    public List<TimeStamp> findAll(@RequestParam Map<String,String> params) {//, @PathVariable("date") @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate date) {
-        Sort order = Sort.by(Sort.Direction.DESC, "dateTime");
-        String localDate = params.getOrDefault("date", LocalDate.now().minusDays(0).toString());
-        Map<String, String> filter = new HashMap<>();
-        filter.put("date", localDate);
-        int pageSize = Integer.parseInt(params.getOrDefault("pageSize", "100"));
-        int pageNumber = Integer.parseInt(params.getOrDefault("pageNumber", "0"));
-        return service.findAll(PageRequest.of(pageNumber, pageSize, order), filter).toList();
-    }
-
-    @GetMapping("/last_card/{card}")
-    public TimeStamp getTopByCard(@PathVariable("card") String card) {
-        return service.getFirstByCard(card);
+        return new ReportTo(timeStampService.getFilteredForReport(startDate, endDate), columnTos);
     }
 }

@@ -59,7 +59,7 @@ public class EmployeeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void createOrUpdate(@RequestBody EmployeeTo employeeTo) {
 //        log.info(employeeTo.toString());
-        Employee employee = Util.createEmployee(employeeTo);
+        Employee employee = new Employee(employeeTo);
         log.info("createOrUpdate " + employee);
         if (employee.isNew()) {
             log.info("create {}", employee);

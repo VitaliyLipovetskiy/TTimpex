@@ -39,7 +39,7 @@ function setCookie(name, value, expY, expM, expD, path, domain, secure) {
 
 $(function() {
     let filterMonth = getCookie('filterMonth');
-    if (filterMonth === null)
+    if (filterMonth == null)
         filterMonth = new Date().toLocaleDateString().substring(3).split('.').reverse().join('-');
     $('#filterMonth').val(filterMonth);
     initTableByData();
@@ -47,7 +47,7 @@ $(function() {
 
 function choiceDayOff(chkbox, employeeId, day) {
     let checked = chkbox.is(":checked");
-    console.log(day);
+    // console.log(day);
     // console.log(chkbox.is(":checked"));
     // $(chkbox).prop("checked", dayOff);
     // ctx.datatableApi.cell(chkbox.closest('td')).data(chkbox.is(":checked"));
@@ -118,7 +118,7 @@ function initTableByData() {
                     data: 'employeeTo.departmentName',
                     render: function (data, type, row) {
                         if (type === "display") {
-                            if (data === null) {
+                            if (data == null) {
                                 return '';
                             } else {
                                 return data;
@@ -150,6 +150,7 @@ function initTableByData() {
                     {
                         data: "dayOffTo.dayOf",
                         title: '<div class="text-center">' + day.dayOfMonth + '<br>' + day.dayOfWeek + '</div>',
+                        // title: '<div class="text-center' + ("сб вс".includes(day.dayOfWeek) ? " data-day-off" : "") +'">' + day.dayOfMonth + '<br>' + day.dayOfWeek + '</div>',
                         orderable: false,
                         defaultContent: false,
                         className: function () {
@@ -157,10 +158,6 @@ function initTableByData() {
                         },
                         render: function (data, type, row, meta) {
                             if (type === "display") {
-                                // console.log(row.employeeTo.id);
-                                // console.log(meta.col - 2);
-                                // console.log(row);
-                                // console.log(row.daysOffTo);
                                 let dayOff = row.daysOffTo[meta.col - 3].dayOff;
                                 let worked = row.daysOffTo[meta.col - 3].worked;
                                 return "<div class='align-middle text-center cell-choice'>" +
@@ -170,16 +167,11 @@ function initTableByData() {
                             return data;
                         },
                         createdCell: function (td, cellData, rowData, row, col) {
-                            // console.log(td);
-                            // console.log(cellData);
-                            // console.log(rowData);
-                            // console.log(row);
-                            // console.log(col);
                             if (!rowData.daysOffTo[col - 3].worked) {
-                                $(td).css('background-color', '#e0c749');
+                                $(td).css('background-color', '#898989');
                             }
                             if ('сб вс'.includes(columnTos[col-3].dayOfWeek)) {
-                                $(td).css('background-color', '#C0C0F3FF');
+                                $(td).addClass('data-day-off');// .css('background-color', '#C0C0F3FF');
                             }
 
                         }

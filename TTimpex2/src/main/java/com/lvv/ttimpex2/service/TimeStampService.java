@@ -1,98 +1,125 @@
 package com.lvv.ttimpex2.service;
 
-import com.lvv.ttimpex2.molel.TimeStamp;
+import com.lvv.ttimpex2.molel.Employee;
+import com.lvv.ttimpex2.molel.EmployeeDate;
+import com.lvv.ttimpex2.molel.TimeStampDate;
+import com.lvv.ttimpex2.repository.TimeStampDateRepository;
 import com.lvv.ttimpex2.repository.TimeStampRepository;
-import com.lvv.ttimpex2.to.TimeStampTo;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
+import com.lvv.ttimpex2.to.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.*;
-
-//import static org.slf4j.LoggerFactory.getLogger;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Vitalii Lypovetskyi
  */
 @Service
-public final class TimeStampService {
+@Transactional(readOnly = true)
+public class TimeStampService {
+
     private final TimeStampRepository timeStampRepository;
+    private final TimeStampDateRepository timeStampDateRepository;
 
-//    final static private Logger log = getLogger(TimeStampService.class);
+    private final DayOffService dayOffService;
 
-    public TimeStampService(TimeStampRepository timestampRepository) {
-        this.timeStampRepository = timestampRepository;
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    public TimeStampService(TimeStampRepository timeStampRepository, TimeStampDateRepository timeStampDateRepository, DayOffService dayOffService) {
+        this.timeStampRepository = timeStampRepository;
+        this.timeStampDateRepository = timeStampDateRepository;
+        this.dayOffService = dayOffService;
     }
 
-    public Page<TimeStamp> findAll(PageRequest page, Map<String, String> filter) {
-//        if (filter.isEmpty()) {
-//            return timeStampRepository.findAll(page);
-//        } else {
-        return timeStampRepository.findAll(specification(filter), page);
-//        }
-    }
+    public DayTo getDayTo(EmployeeTo employeeTo, LocalDate localDate, DayOffTo dayOffTo) {
+        Employee employee = new Employee(employeeTo);
+        Map<String, LocalTime> firstAndLastByDateAndEmployee = timeStampRepository.getFirstAndLastByDateAndEmployee(localDate, employee);
+        // надо получить время первой отметки
+        LocalTime comingAutoTime = firstAndLastByDateAndEmployee.get("first");
+        // надо получить время последней отметки
+        LocalTime leavingAutoTime = firstAndLastByDateAndEmployee.get("last");
 
-    public List<TimeStampTo> findAllTo(PageRequest page, Map<String, String> filter) {
-//        if (filter.isEmpty()) {
-//            return timeStampRepository.findAll(page);
-//        } else {
+        double workedOut = 0.0;
+        if (employeeTo.getAccountingForHoursWorked()) {
+            workedOut = 0.0;           // ??? вычислить долю сколько отработано за этот день
 
-        List<TimeStampTo> allTo = timeStampRepository.findAllTo();
-        System.out.println(allTo.size());
-        return allTo;
-//        }
-    }
 
-    public List<TimeStamp> findAllByPost(int post) {
-        return timeStampRepository.findAllByPost(post);
-    }
-
-    public List<TimeStamp> findAllByCard(String card) {
-        return timeStampRepository.findAllByCard(card);
-    }
-
-    public List<TimeStamp> findAllByCardAndEvent(String card, int event) {
-        return timeStampRepository.findAllByCardAndEvent(card, event);
-    }
-
-    public TimeStamp getFirstByCard(String card) {
-        return timeStampRepository.getFirstByCardOrderByDateTimeDesc(card);
-    }
-
-    public TimeStamp getTopByCardAndEvent(String card, int event) {
-        return timeStampRepository.getTopByCardAndEventOrderByDateTimeDesc(card, event);
-    }
-
-    private Specification<TimeStamp> specification(Map<String, String> filter) {
-        Specification<TimeStamp> spec = Specification.where(null);
-        if (filter.get("date") != null) {
-            spec = spec.and(FilterSpecs.today(filter.get("date")));
         }
-//        if (filter.get("name") != null)
-//            spec = spec.and(FilterSpecs.nameContains(filter.get("name")));
-//        if (filter.get("before") != null)
-//            spec = spec.and(FilterSpecs.birthdayLessThanOrEqualTo(filter.get("before")));
+        TimeStampDate timeStampDate = timeStampDateRepository.get(new EmployeeDate(
+                employee,
+                dayOffTo.getDate()));
+        if (timeStampDate == null) {
+            timeStampDate = new TimeStampDate();
+        }
+        int penalty = 0;
+        // ??? рассчитать штраф за эту дату
+        if (timeStampDate.getPenalty() != null) {
+            penalty = timeStampDate.getPenalty();
+        }
+        return new DayTo(
+                dayOffTo.getDate(),
+                comingAutoTime,
+                timeStampDate.getComing(),
+                leavingAutoTime,
+                timeStampDate.getLeaving(),
+                penalty,
+                dayOffTo.getDayOff(),
+                dayOffTo.getWorked(),
+                workedOut);
 
-        return spec;
     }
 
-    static final class FilterSpecs {
+    public List<ReportDataTo> getFilteredForReport(LocalDate startDate, LocalDate endDate) {
+        log.info("getFilteredForReport from {} to {}", startDate, endDate);
+        Collection<EmployeeDaysOffTo> allEmployeesWithDaysOff = dayOffService.getAllEmployeesWithDaysOff(startDate, endDate);
+        List<ReportDataTo> result = new ArrayList<>();
+        allEmployeesWithDaysOff.forEach(employeeDaysOffTo -> {
+            List<DayTo> daysTo = new ArrayList<>();
+            int penalty = 0;
+            double workedOut = 0.0;
+            Map<LocalDate, DayOffTo> mapDaysOffTo = employeeDaysOffTo.getMapDaysOffTo();
+            EmployeeTo employeeTo = employeeDaysOffTo.getEmployeeTo();
+            for (LocalDate localDate = startDate; localDate.isBefore(endDate); localDate = localDate.plusDays(1)) {
+                DayOffTo dayOffTo = mapDaysOffTo.get(localDate);
+//                if (dayOffTo == null) {
+//                    System.out.println(dayOffTo);
+//                    dayOffTo = new DayOffTo(localDate,
+//                            null,   // ??? dayOff
+//                            null);         // ??? worked
+//                }
 
-        private FilterSpecs() {}
+                DayTo dayTo = getDayTo(employeeTo, localDate, dayOffTo);
 
-        public static Specification<TimeStamp> today(String date) {
-            LocalDate localDate = LocalDate.parse(date);
-            return (Specification<TimeStamp>) (root, criteriaQuery, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("dateTime").as(LocalDate.class), localDate);
-        }
-        public static Specification<TimeStamp> nameContains(String name) {
-            return (Specification<TimeStamp>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.like(root.get("name"), "%" + name + "%");
-        }
-
-        public static Specification<TimeStamp> birthdayLessThanOrEqualTo(String before) {
-            return (Specification<TimeStamp>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("birthday"), new Date(Long.parseLong(before)));
-        }
+                daysTo.add(dayTo);
+                penalty += dayTo.getPenalty();
+                workedOut += dayTo.getWorkedOut();
+            }
+            StringBuilder employeeName = new StringBuilder(employeeTo.getName());
+            if (employeeTo.getStartTime() != null || employeeTo.getEndTime() != null) {
+                employeeName.append("<br>");
+            }
+                if (employeeTo.getStartTime() != null) {
+                employeeName.append("c ").append(employeeTo.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")));
+            }
+            if (employeeTo.getEndTime() != null) {
+                employeeName.append(" до ").append(employeeTo.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm")));
+            }
+            ReportDataTo reportDataTo = new ReportDataTo(
+                    employeeTo.getId(),
+                    employeeName.toString(),
+                    employeeTo.getAccountingForHoursWorked(),
+                    penalty, workedOut, daysTo);
+            result.add(reportDataTo);
+        });
+        return result;
     }
+
 }

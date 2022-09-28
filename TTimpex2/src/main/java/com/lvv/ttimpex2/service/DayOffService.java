@@ -11,6 +11,7 @@ import com.lvv.ttimpex2.to.EmployeeDaysOffTo;
 import com.lvv.ttimpex2.to.EmployeeTo;
 import com.lvv.ttimpex2.utils.Util;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -20,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Vitalii Lypovetskyi
  */
 @Service
+@Transactional(readOnly = true)
 public class DayOffService {
 
     private final DaysOffRepository daysOffRepository;
@@ -32,11 +34,12 @@ public class DayOffService {
         this.workedRepository = workedRepository;
     }
 
+    @Transactional
     public void update(int employeeId, DayOff dayOff) {
         daysOffRepository.update(employeeId, dayOff);
     }
 
-    public Collection<EmployeeDaysOffTo> getAllEmployeesForWithHolidays(LocalDate startDate, LocalDate endDate) {
+    public Collection<EmployeeDaysOffTo> getAllEmployeesWithDaysOff(LocalDate startDate, LocalDate endDate) {
         // карта сотрудников со списком приема и увольнения
         Map<Integer, List<Worked>> allEmployeeWorked = workedRepository.getAllEmployeeBetween(startDate, endDate);
         // карта сотрудников с картой выходных дней
@@ -59,10 +62,6 @@ public class DayOffService {
                 }
             });
 
-        });
-
-        allEmployeeDayOffTo.forEach((i, v) -> {
-            System.out.println(i + "=>" + v);
         });
 
         Collection<EmployeeDaysOffTo> employeeDaysOffToList = new ArrayList<>();

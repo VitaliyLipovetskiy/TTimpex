@@ -1,7 +1,7 @@
 package com.lvv.ttimpex2.service.handlers;
 
-import com.lvv.ttimpex2.molel.TimeStamp;
-import com.lvv.ttimpex2.repository.TimeStampRepository;
+import com.lvv.ttimpex2.molel.old.TimeStampOld;
+import com.lvv.ttimpex2.repository.old.DataJpaTimeStampOldRepository;
 
 import java.nio.file.Path;
 import java.sql.ResultSet;
@@ -12,17 +12,17 @@ import java.time.LocalDateTime;
 /**
  * @author Vitalii Lypovetskyi
  */
-public final class TimeStampHandler implements ParadoxHandler {
-    private final TimeStampRepository repository;
+public final class TimeStampOldHandler implements ParadoxHandler {
+    private final DataJpaTimeStampOldRepository repository;
 
-    public TimeStampHandler(TimeStampRepository repository) {
+    public TimeStampOldHandler(DataJpaTimeStampOldRepository repository) {
         this.repository = repository;
     }
 
     @Override
     public void call(Path pathDB, ResultSet resultSet) throws SQLException {
         while (resultSet.next()) {
-            TimeStamp timestamp = new TimeStamp(
+            TimeStampOld timestamp = new TimeStampOld(
                     resultSet.getString("card") +
                             resultSet.getString("post") +
                             resultSet.getString("event") +
@@ -31,9 +31,9 @@ public final class TimeStampHandler implements ParadoxHandler {
                     resultSet.getInt("post"),
                     resultSet.getString("card"),
                     Math.abs(resultSet.getInt("event") - 1));
-            if (!repository.existsById(timestamp.getId())) {
-                repository.save(timestamp);
-            }
+//            if (!repository.existsById(timestamp.getId())) {
+//                repository.save(timestamp);
+//            }
         }
     }
 }

@@ -38,6 +38,10 @@ tr[data-employee-worked="true"] {
     /*font-style: italic;*/
 }
 
+.data-day-off {
+    background-color: #C0C0F3FF;
+}
+
 .table .column-day {
     min-width: 52px;
 }
@@ -46,7 +50,7 @@ tr[data-employee-worked="true"] {
     /*font-size: 0.8rem;*/
 }
 
-#container-fine {
+#container-penalty {
     height: 20px;
     /*border-style: solid none none;*/
     /*border-color: black;*/
@@ -75,13 +79,13 @@ tr[data-employee-worked="true"] {
 
 .cell-red {
     flex: 1;
-    background-color: red;
+    background-color: #ef868d;
     /*margin: -3.6px;*/
 }
 
-.cell-blue {
+.cell-dayoff {
     flex: 1;
-    background-color: #00D9FFB2;
+    /*background-color: #bbbbbb;*/
     /*margin: -3.6px;*/
 }
 

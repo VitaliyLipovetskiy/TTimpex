@@ -1,11 +1,10 @@
-package com.lvv.ttimpex2.service;
+package com.lvv.ttimpex2.service.old;
 
-import com.lvv.ttimpex2.molel.SCode;
-import com.lvv.ttimpex2.repository.SCodeRepository;
-import com.lvv.ttimpex2.service.handlers.SCodeHandler;
+import com.lvv.ttimpex2.molel.old.SCodeOld;
+import com.lvv.ttimpex2.repository.old.SCodeOldRepository;
+import com.lvv.ttimpex2.service.ParadoxService;
 import com.lvv.ttimpex2.utils.UtilsDB;
 import org.slf4j.Logger;
-import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,18 +17,18 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * @author Vitalii Lypovetskyi
  */
-@Service
+//@Service
 public final class SCodeService {
-    private final SCodeRepository repository;
+    private final SCodeOldRepository repository;
     private final Properties externalProperties = new Properties();
     private static final Logger LOG = getLogger(SCodeService.class);
 
-    public SCodeService(SCodeRepository repository) {
+    public SCodeService(SCodeOldRepository repository) {
         this.repository = repository;
     }
 
-    public List<SCode> findAll() {
-        return repository.findAll();
+    public List<SCodeOld> findAll() {
+        return null;//repository.findAll();
     }
 
     public void checkSCode() {

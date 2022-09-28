@@ -28,6 +28,6 @@ public class InMemoryDepartmentRepository extends InMemoryBaseRepository<Departm
         log.info("getAll");
         return map.values().stream()
                 .sorted(Comparator.comparing(Department::getName))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

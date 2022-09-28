@@ -1,29 +1,20 @@
 package com.lvv.ttimpex2.controller;
 
 import com.lvv.ttimpex2.molel.DayOff;
-import com.lvv.ttimpex2.molel.Worked;
-import com.lvv.ttimpex2.repository.DaysOffRepository;
 import com.lvv.ttimpex2.service.DayOffService;
 import com.lvv.ttimpex2.service.EmployeeService;
 import com.lvv.ttimpex2.to.ColumnTo;
 import com.lvv.ttimpex2.to.EmployeeDaysOffTo;
-import com.lvv.ttimpex2.to.EmployeeTo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author Vitalii Lypovetskyi
@@ -74,7 +65,7 @@ public class DayOffController {
 //        System.out.println("======");
 //        employeeDaysOffToList.forEach(System.out::println);
 
-        Collection<EmployeeDaysOffTo> employeeDaysOffToList = dayOffService.getAllEmployeesForWithHolidays(startDate, endDate);
+        Collection<EmployeeDaysOffTo> employeeDaysOffToList = dayOffService.getAllEmployeesWithDaysOff(startDate, endDate);
 
         Collection<ColumnTo> columnTos = new ArrayList<>();
         startDate.datesUntil(endDate).forEach(date -> columnTos.add(new ColumnTo(date)));

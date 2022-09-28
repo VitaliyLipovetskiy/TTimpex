@@ -24,61 +24,66 @@ $(function () {
                     },
                     {
                         data: 'cardId',
+                        orderable: false,
                         render: function (data, type, row) {
                             if (type === "display") {
-                                if (data === null) return '';
+                                if (data == null) return '';
                                 return "<div class='align-middle text-center'>" + data + "</div>";
                             }
                             return data;
-                        },
-                        orderable: false
+                        }
                     },
                     {
                         data: 'departmentName',
+                        orderable: false,
                         visible: false,
                         render: function (data, type, row) {
                             if (type === "display") {
-                                if (data === null) {
-                                    return '';
-                                } else {
-                                    return data;
-                                }
+                                return data == null ? '' : data;
                             }
                             return data;
-                        },
-                        orderable: false
+                        }
                     },
                     {
                         data: 'startTime',
+                        orderable: false,
                         render: function (data, type, row) {
                             if (type === "display") {
-                                if (data === null) return '';
+                                if (data == null) return '';
                                 return "<div class='align-middle text-center'>" + data.substring(0,5) + "</div>";
                             }
                             return data;
-                        },
-                        orderable: false
+                        }
                     },
                     {
                         data: 'endTime',
+                        orderable: false,
                         render: function (data, type, row) {
                             if (type === "display") {
-                                if (data === null) return '';
+                                if (data == null) return '';
                                 return "<div class='align-middle text-center'>" + data.substring(0,5) + "</div>";
                             }
                             return data;
-                        },
-                        orderable: false
+                        }
+                    },
+                    {
+                        data: 'accountingForHoursWorked',
+                        orderable: false,
+                        defaultContent: "",
+                        visible: true,
+                        render: function (data, type, row) {
+                            if (type === "display") {
+                                return "<div class='align-middle text-center'><input type='checkbox' " + (data ? "checked" : "") + " onclick='return false;'/></div>";
+                            }
+                        }
                     },
                     {
                         data: 'recruitment',
+                        orderable: false,
                         defaultContent: "",
                         render: function (data, type, row) {
                             if (type === "display") {
                                 if (typeof data === "string") {
-                                    // let parts = data.split('-');
-                                    // let date = new Date(parts[0], parts[1] - 1, parts[2]);
-                                    // console.log(date.toLocaleDateString('ru-RU'));
                                     return "<div class='align-middle text-center cell-choice'>" + data.split('-').reverse().join('.') + "</div>";
                                 }
                                 return "<div class='align-middle text-center cell-choice'></div>";
@@ -88,6 +93,8 @@ $(function () {
                     },
                     {
                         data: 'dismissal',
+                        orderable: false,
+                        defaultContent: "",
                         render: function (data, type, row) {
                             if (type === "display") {
                                 if (typeof data === "string") {
@@ -97,30 +104,29 @@ $(function () {
                             }
                             return data;
                         },
-                        orderable: false,
-                        defaultContent: "",
                     },
                     {
                         orderable: false,
                         defaultContent: "",
-                        render: function renderEditBtn(data, type, row) {
+                        render: function (data, type, row) {
                             if (type === "display") {
                                 return "<div class='align-middle text-center'><a onclick='updateRow(" + row.id + ");'><span class='fa fa-pencil'></span></a></div>";
                             }
+                            return data;
                         }
                     },
                     {
                         // data: false,
+                        orderable: false,
                         visible: false,
                         render: function (data, type, row) {
-                            if (row.recruitment === null && row.dismissal === null) {
+                            if (row.recruitment == null && row.dismissal == null) {
                                 return false;
-                            } else if (row.dismissal === null) {
+                            } else if (row.dismissal == null) {
                                 return true;
                             }
                             return false;
-                        },
-                        orderable: false
+                        }
                     }
                 ],
                 order: [[groupColumn,'asc']],
@@ -138,17 +144,13 @@ $(function () {
                 },
                 createdRow: function (row, data, dataIndex) {
                     let worked = true;
-                    if (data.recruitment === null && data.dismissal === null) {
+                    if (data.recruitment == null && data.dismissal == null) {
                         worked = true;
                     } else {
-                        if (data.dismissal === null) {
+                        if (data.dismissal == null) {
                             worked = false;
                         }
                     }
-                    // console.log(row);
-                    // console.log(data);
-                    // console.log(dataIndex);
-                    // console.log(data.name + ' ' + data.recruitment + ' ' + data.dismissal + ' ' + worked);
                     $(row).attr("data-employee-worked", worked);
                 },
                 // columnDefs: [
@@ -182,7 +184,7 @@ $(function () {
                                 if (last !== group && group !== '') {
                                     $(rows)
                                         .eq(i)
-                                        .before('<tr class="group"><td colspan="7">' + group + '</td></tr>');
+                                        .before('<tr class="group"><td colspan="8">' + group + '</td></tr>');
 
                                     last = group;
                                 }
@@ -191,7 +193,7 @@ $(function () {
                 }
             });
 
-            ctx.datatableApi.column(8).search(true).draw();
+            ctx.datatableApi.column(9).search(true).draw();
 
             form = $('#detailsForm');
 
@@ -202,6 +204,7 @@ $(function () {
 
 function save() {
     let data = form.serializeArray();
+    // console.log(form);
     // console.log(data);
     let dataForm = {};
     dataForm.id = data.find(v => v.name === 'id').value;
@@ -220,8 +223,15 @@ function save() {
     dataForm.endTime = data.find(v => v.name === 'endTime').value;
     dataForm.recruitment = data.find(v => v.name === 'recruitment').value;
     dataForm.dismissal = data.find(v => v.name === 'dismissal').value;
+    let timeTracking = data.find(v => v.name === 'accountingForHoursWorked');
+    if (timeTracking === undefined) {
+        timeTracking = false;
+    } else {
+        timeTracking = data.find(v => v.name === 'accountingForHoursWorked').value;
+    }
+    dataForm.accountingForHoursWorked = timeTracking;
 
-    console.log(dataForm);
+    // console.log(dataForm);
 
     $.ajax({
         type: "POST",
@@ -260,6 +270,13 @@ function updateRow(id) {
                 }
             }
             form.find("input[name='" + key + "']").val(value);
+            if (key === 'accountingForHoursWorked') {
+                // console.log($("#accountingForHoursWorked"));
+                // console.log(value);
+                $("#accountingForHoursWorked").prop("checked", value);
+                // console.log($("#accountingForHoursWorked"));
+            }
+            // console.log(key + "=>" + form.find("input[name='" + key + "']").val());
         });
         // $.get(workedAjaxUrl + id, function (data) {
         //     $.each(data, function (key, value) {
@@ -272,8 +289,12 @@ function updateRow(id) {
 
 function selectFilter(chkbox) {
     if (chkbox.is(":checked")) {
-        ctx.datatableApi.column(8).search('').draw();
+        ctx.datatableApi.column(9).search('').draw();
     } else {
-        ctx.datatableApi.column(8).search(true).draw();
+        ctx.datatableApi.column(9).search(true).draw();
     }
+}
+
+function changeAccountingForHoursWorked() {
+    form.find("input[name='accountingForHoursWorked']").val($("#accountingForHoursWorked").is(':checked'));
 }
