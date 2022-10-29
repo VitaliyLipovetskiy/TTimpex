@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/timestamp?currentSchema=timestamp
     username: postgres
-    password: admin
+    password: password
   jpa:
     hibernate:
       ddl-auto: update

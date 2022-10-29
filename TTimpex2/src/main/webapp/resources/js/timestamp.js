@@ -141,7 +141,7 @@ function formColumns(data) {
                         result += "<br>";
                     }
                     if (row.workedOut !== 0) {
-                        result += "</div><div class='text-right'>" + row.workedOut;
+                        result += "</div><div class='text-right'>" + row.workedOut.toFixed(3);
                     }
                     return result+ "</div>";
                 }
@@ -218,12 +218,12 @@ function formColumns(data) {
                         if (row.accountingForHoursWorked === true) {
                             result += '</div><div id="container-worked" class="text-center';
                             if (data.dayOff === true) {
-                                result += '">' + (data.workedOut === 0 ? '' : data.workedOut);
+                                result += '">' + (data.workedOut === 0 ? '' : data.workedOut.toFixed(3));
                             } else {
                                 if (data.workedOut === 0) {
                                     result += ' cell-font-red'
                                 }
-                                result += '">' + data.workedOut;
+                                result += '">' + data.workedOut.toFixed(3);
                             }
                         }
                         return result + '</div>';
