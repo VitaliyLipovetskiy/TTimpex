@@ -29,7 +29,7 @@ $(function () {
     for (let i = 0; i < 31; i++) {
         columns.push(
             {
-                data: "daysTo."+i,
+                data: "daysDto."+i,
                 // title: '<div class="text-center">' + i + '<br>sa</div>',
                 // title: function (data, type, row) {
                 //     return '<div class="text-center">' + i + '<br>sa</div>';
@@ -146,7 +146,7 @@ $(function () {
     //     columns: [
     //         { data: 'id' },
     //         { data: 'name' },
-    //         { data: 'daysTo' },
+    //         { data: 'daysDto' },
     //     ]
     // });
     // table_datatable_params = {

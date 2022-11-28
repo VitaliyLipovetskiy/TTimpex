@@ -3,22 +3,31 @@ let checked= false;
 let reportAjaxUrl = "api/ts/";
 
 const ctx = {
-    ajaxUrl: reportAjaxUrl,
+    ajaxUrl: reportAjaxUrl
     // updateTable: updateTableByData
-    updateTable: function () {
-        $.get(reportAjaxUrl, updateTableByData);
-    }
+    // updateTable: function () {
+    //     $.get(reportAjaxUrl, updateTableByData);
+    // }
 }
 
-function getDT() {
+function updateTableByData() {
+    // setCookie('filterMonth', $('#filterMonth').val());
+    ctx.datatableApi.destroy();
+    $('#datatable').empty();
+    initTableByData();
+}
+
+function initTableByData() {
     $.ajax({
         url: reportAjaxUrl,
         success: function (data) {
             // console.log(data);
 
-            let countDays = data.columnTos.length;
+            let countDays = data.data[0].daysDto.length;
 
-            $('th#month').attr('colSpan', countDays).text('Август (25)');
+            $('th#month').attr('colSpan', countDays).addClass("").text(data.tableHeader);
+            // $('th#month').attr('colSpan', countDays);
+
             $('#datatable>thead').append('<tr id="days"></tr>');
             let days = $('#datatable>thead>tr#days');
             for (let i = 0; i < countDays; i++) {
@@ -79,16 +88,75 @@ function getDT() {
 function updateCell() {
     $('#datatable').on('dblclick', 'td', function () {
         if (ctx.datatableApi.column(this).index() < 3) return;
-        console.log(ctx.datatableApi.row(this).data());
-        // console.log(ctx.datatableApi.column(this).data());
-        console.log(ctx.datatableApi.cell(this).data());
 
-        // form.find(":input").val("");
         $("#modalTitle").html(i18n["editTitle"]);
 
+        let rowData = ctx.datatableApi.row(this).data();
+        let cellData = ctx.datatableApi.cell(this).data();
+
+        $('#id').val(rowData.id);
+        $('#date').val(cellData.date);
+        let formatter = new Intl.DateTimeFormat("ru", {
+            weekday: "short",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        });
+        console.log(cellData.penalty);
+        $('#title').val(rowData.name.split('<br>')[0] + ' (' + formatter.format(new Date(cellData.date)) + ')');
+        $("#worked").prop("checked", cellData.worked);
+        if (cellData.worked) {
+            $('#comingCorrectTime').val(cellData.comingCorrectTime).prop('disabled', false);
+            $('#comingAutoTime').val(cellData.comingAutoTime);
+            $('#leavingCorrectTime').val(cellData.leavingCorrectTime).prop('disabled', false);
+            $('#leavingAutoTime').val(cellData.leavingAutoTime);
+            $('#penalty').val(cellData.penalty).prop('disabled', false);
+            $('#workedOut').val(cellData.workedOut).prop('disabled', false);
+            $("#dayOff").prop("checked", cellData.dayOff);
+            $('.btn-primary').prop('disabled', false);
+        } else {
+            $('#comingCorrectTime').prop('disabled', true);
+            $('#leavingCorrectTime').prop('disabled', true);
+            $('#penalty').prop('disabled', true);
+            $('#workedOut').prop('disabled', true);
+            $('.btn-primary').prop('disabled', true);
+        }
+        $('.worked-out').prop('hidden', !rowData.accountingForHoursWorked)
+
+        // console.log(ctx.datatableApi.row(this).data());
+        // id: 15, name: 'Андреев Андрей', accountingForHoursWorked: false, penalty: 31000, workedOut: 0, …
+
+        // console.log(cellData);
+        // date: '2022-10-03', comingAutoTime: null, comingCorrectTime: null, leavingAutoTime: null, leavingCorrectTime: null, …
 
         $('#editRow').modal();
     });
+}
+
+function save() {
+    let dataForm = {};
+    dataForm.id = $('#id').val();
+    dataForm.date = $('#date').val();
+    dataForm.comingCorrectTime = $('#comingCorrectTime').val();
+    dataForm.leavingCorrectTime = $('#leavingCorrectTime').val();
+    if ($('#penalty').val() != '') {
+        dataForm.penalty = $('#penalty').val();
+    }
+    dataForm.workedOut = $('#workedOut').val();
+    console.log(dataForm);
+
+    $.ajax({
+        type: "PATCH",
+        url: ctx.ajaxUrl,
+        data: JSON.stringify(dataForm),
+        dataType: "json",
+        contentType: "application/json"
+    }).done(function () {
+        $("#editRow").modal("hide");
+        updateTableByData();
+        // getDT();
+        // successNoty("common.saved");
+    })
 }
 
 // $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
@@ -166,12 +234,12 @@ function formColumns(data) {
         }
     ];
     // return columns;
-    let columnTos = data.columnTos;
-    for (let i = 0; i < columnTos.length; i++) {
-        let day = columnTos[i];
+    let columnsDto = data.data[0].daysDto;
+    for (let i = 0; i < columnsDto.length; i++) {
+        let day = columnsDto[i];
         columns.push(
             {
-                data: "daysTo." + i,
+                data: "daysDto." + i,
                 title: '<div class="text-center">' + day.dayOfMonth + '<br>' + day.dayOfWeek + '</div>',
                 // title: '<div class="container text-primary"><div class="row"><div class="col">' + i + '<br>sa</div></div></div>',
                 orderable: false,
@@ -179,10 +247,13 @@ function formColumns(data) {
                 render: function (data, type, row) {
                     // console.log(data);
                     if (type === "display") {
+                        if (new Date(data.date) > new Date()) {
+                            return "";
+                        }
                         // Приход
                         let result = '<div id="container"><div class="text-right cell-time';
                         if (data.comingCorrectTime == null) {
-                            if (data.dayOff === true) {
+                            if (data.dayOff === true || data.worked === false) {
                                 result += ' box cell-dayoff';
                             } else if (data.comingAutoTime == null) {
                                 result += ' box cell-red';
@@ -197,7 +268,7 @@ function formColumns(data) {
                         result += '</div><div class="text-right cell-time';
                         // Уход
                         if (data.leavingCorrectTime == null) {
-                            if (data.dayOff === true) {
+                            if (data.dayOff === true || data.worked === false) {
                                 result += ' box cell-dayoff';
                             } else if (data.leavingAutoTime == null) {
                                 result += ' box cell-red';
@@ -231,13 +302,13 @@ function formColumns(data) {
                     return data;
                 },
                 createdCell: function (td, cellData, rowData, row, col) {
-                    if (cellData.dayOff) {
+                    if (cellData.dayOff || !cellData.worked) {
                         $(td).css('background-color', '#898989');
                     }
                     // if (!rowData.daysOffTo[col - 3].worked) {
                     //     $(td).css('background-color', '#e0c749');
                     // }
-                    if ('сб вс'.includes(columnTos[col-3].dayOfWeek)) {
+                    if ('сб вс'.includes(columnsDto[col-3].dayOfWeek)) {
                         $(td).addClass('data-day-off');// .css('background-color', '#C0C0F3FF');
                     }
                 }
@@ -265,7 +336,7 @@ function choice(chkbox) {
 
 $(function() {
 
-    getDT();
+    initTableByData();
     updateCell();
 
 });

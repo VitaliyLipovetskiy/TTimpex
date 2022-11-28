@@ -2,7 +2,7 @@ package com.lvv.ttimpex2.service.old;
 
 import com.lvv.ttimpex2.molel.old.TimeStampOld;
 import com.lvv.ttimpex2.repository.old.DataJpaTimeStampOldRepository;
-import com.lvv.ttimpex2.to.old.TimeStampOldTo;
+import com.lvv.ttimpex2.dto.old.TimeStampOldTo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,9 +12,7 @@ import java.util.*;
 
 //import static org.slf4j.LoggerFactory.getLogger;
 
-/**
- * @author Vitalii Lypovetskyi
- */
+
 //@Service
 public final class TimeStampOldService {
     private final DataJpaTimeStampOldRepository dataJpaTimeStampOldRepository;
@@ -39,7 +37,7 @@ public final class TimeStampOldService {
 //        } else {
 
         List<TimeStampOldTo> allTo = dataJpaTimeStampOldRepository.findAllTo();
-        System.out.println(allTo.size());
+//        System.out.println(allTo.size());
         return allTo;
 //        }
     }

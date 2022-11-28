@@ -25,7 +25,7 @@ function capitalizeFirstLetter(string) {
 $(document).ready(function() {
 
 
-    getDT();
+    initTableByData();
 
 
 } );

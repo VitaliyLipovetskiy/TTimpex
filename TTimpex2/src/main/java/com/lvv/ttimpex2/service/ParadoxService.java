@@ -2,9 +2,8 @@ package com.lvv.ttimpex2.service;
 
 import com.lvv.ttimpex2.repository.old.DataJpaTimeStampOldRepository;
 import com.lvv.ttimpex2.service.handlers.ParadoxHandler;
-import com.lvv.ttimpex2.service.handlers.TimeStampOldHandler;
 import com.lvv.ttimpex2.utils.UtilsDB;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.nio.file.Files;
@@ -22,14 +21,11 @@ import java.util.concurrent.Executors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-/**
- * @author Vitalii Lypovetskyi
- */
+
+//@AllArgsConstructor
+@Slf4j
 //@Service
 public final class ParadoxService {
-
-//    private final JdbcTemplate jdbcTemplate;
-    private final DataJpaTimeStampOldRepository dataJpaTimeStampOldRepository;
     private LocalDate localDate;
     private LocalTime lastExecutionTime;
     private String fileDB;
@@ -38,10 +34,8 @@ public final class ParadoxService {
     @Value("${app.night}")
     private volatile Long sleepNight;
     private final Properties externalProperties = new Properties();
-    private static final Logger LOG = getLogger(ParadoxService.class);
 
-    public ParadoxService(DataJpaTimeStampOldRepository dataJpaTimeStampOldRepository) {
-        this.dataJpaTimeStampOldRepository = dataJpaTimeStampOldRepository;
+    public ParadoxService() {
 //        checkHandling();
     }
 
@@ -80,7 +74,7 @@ public final class ParadoxService {
 //        System.out.println(fileDB + " " + lastExecutionTime);
     }
 
-    public static void tableParadoxHandler(Path pathDB, ParadoxHandler paradoxHandler) {
+    public static void tableParadoxHandler(Path pathDB, ParadoxHandler paradoxHandler, LocalDate date) {
         try {
             Class.forName("com.googlecode.paradox.Driver");
             try (Connection connection = DriverManager.getConnection("jdbc:paradox:" + pathDB.getParent());
@@ -88,15 +82,15 @@ public final class ParadoxService {
                  ResultSet resultSet = statement.executeQuery("SELECT * FROM " +
                          pathDB.getFileName().toString().replaceAll("\\.\\w+$", ""))){
 
-                paradoxHandler.call(pathDB, resultSet);
+                paradoxHandler.call(pathDB, resultSet, date);
 
             } catch (Exception e) {
-                LOG.error(e.toString());
+                log.error(e.toString());
                 e.printStackTrace();
             }
         }
         catch (Exception e) {
-            LOG.error(e.toString());
+            log.error(e.toString());
         }
     }
 
@@ -116,18 +110,18 @@ public final class ParadoxService {
                     }
                     setLastExecutionTime(LocalTime.now());
                     Path pathDB = Paths.get( path + fileDB + ".DB");
-                    LOG.warn("pathDB={}", pathDB);
+                    log.warn("pathDB={}", pathDB);
                     if (Files.exists(pathDB)) {
-                        tableParadoxHandler(pathDB, new TimeStampOldHandler(dataJpaTimeStampOldRepository));
+//                        tableParadoxHandler(pathDB, new TimeStampHandler(dataJpaTimeStampOldRepository));
                     } else {
-                        LOG.error("Files.notExists {}", pathDB);
+                        log.error("Files.notExists {}", pathDB);
                     }
 //                    LOG.warn("sleep={} DateTime={} {} fileDB={} count={}",
 //                            sleep, localDate, lastExecutionTime, fileDB, dataJpaTimeStampRepository.count());
                     try {
                         Thread.sleep(sleep);
                     } catch (InterruptedException e) {
-                        LOG.error(e.toString());
+                        log.error(e.toString());
                         e.printStackTrace();
                     }
                 }

@@ -1,6 +1,6 @@
 const employeesAjaxUrl = "api/employees/";
-const departmentAjaxUrl = "api/department/";
-const workedAjaxUrl = "api/worked/";
+const departmentAjaxUrl = "api/departments/";
+// const workedAjaxUrl = "api/worked/";
 const departments = [];
 
 const ctx = {
@@ -12,23 +12,26 @@ const ctx = {
 
 $(function () {
     $.ajax({
-        url: employeesAjaxUrl,
+        url: ctx.ajaxUrl,
         success: function (data) {
             let groupColumn = 2;
             ctx.datatableApi = $('#datatable').DataTable({
                 data: data,
                 columns: [
                     {
-                        data: 'name',
+                        data: 'fullName',
                         orderable: false
                     },
                     {
-                        data: 'cardId',
+                        data: 'cards',
                         orderable: false,
                         render: function (data, type, row) {
                             if (type === "display") {
                                 if (data == null) return '';
-                                return "<div class='align-middle text-center'>" + data + "</div>";
+                                for (let i = 0; i < data.length; i++) {
+
+                                }
+                                return "<div class='align-middle text-center'>" + data.map(card => card.id).join(', ') + "</div>";
                             }
                             return data;
                         }
@@ -110,7 +113,7 @@ $(function () {
                         defaultContent: "",
                         render: function (data, type, row) {
                             if (type === "display") {
-                                return "<div class='align-middle text-center'><a onclick='updateRow(" + row.id + ");'><span class='fa fa-pencil'></span></a></div>";
+                                return "<div class='align-middle text-center'><a onclick='updateRow(\"" + row.id + "\");'><span class='fa fa-pencil'></span></a></div>";
                             }
                             return data;
                         }
@@ -207,17 +210,20 @@ function save() {
     // console.log(form);
     // console.log(data);
     let dataForm = {};
-    dataForm.id = data.find(v => v.name === 'id').value;
+    let id = data.find(v => v.name === 'id').value;
+    let type = "PATCH";
+    if (id === '') {
+        type = "POST";
+    }
     dataForm.firstName = data.find(v => v.name === 'firstName').value;
     dataForm.lastName = data.find(v => v.name === 'lastName').value;
     dataForm.middleName = data.find(v => v.name === 'middleName').value;
-    dataForm.cardId = data.find(v => v.name === 'cardId').value;
-    dataForm.name = '';
+    // dataForm.cardId = data.find(v => v.name === 'cardId').value;
     let department = $('#department option:selected');
-    if (department.val() === '0' || department.val() === undefined) {
-        dataForm.department = null;
-    } else {
-        dataForm.department = {id: department.val(), name: department.text()};
+    if (department.val() !== '0' && department.val() !== undefined) {
+        // dataForm.departmentId = null;
+    // } else {
+        dataForm.departmentId = department.val();
     }
     dataForm.startTime = data.find(v => v.name === 'startTime').value;
     dataForm.endTime = data.find(v => v.name === 'endTime').value;
@@ -232,10 +238,11 @@ function save() {
     dataForm.accountingForHoursWorked = timeTracking;
 
     // console.log(dataForm);
-
+    // console.log(type);
+    // console.log(ctx.ajaxUrl + id);
     $.ajax({
-        type: "POST",
-        url: ctx.ajaxUrl,
+        type: type,
+        url: ctx.ajaxUrl + id,
         data: JSON.stringify(dataForm),
         dataType: "json",
         contentType: "application/json"
@@ -263,6 +270,7 @@ function updateRow(id) {
     $("#modalTitle").html(i18n["editTitle"]);
     updateDepartments();
     $.get(ctx.ajaxUrl + id, function (data) {
+        // console.log(data);
         $.each(data, function (key, value) {
             if (key === 'department') {
                 if (data.department !== null) {
@@ -271,10 +279,13 @@ function updateRow(id) {
             }
             form.find("input[name='" + key + "']").val(value);
             if (key === 'accountingForHoursWorked') {
-                // console.log($("#accountingForHoursWorked"));
-                // console.log(value);
                 $("#accountingForHoursWorked").prop("checked", value);
-                // console.log($("#accountingForHoursWorked"));
+            }
+            if (key === 'recruitment') {
+                $("#recruitment").prop('readonly', value !== null);
+            }
+            if (key === 'dismissal') {
+                $("#dismissal").prop('readonly', value !== null);
             }
             // console.log(key + "=>" + form.find("input[name='" + key + "']").val());
         });

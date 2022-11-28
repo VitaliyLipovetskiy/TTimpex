@@ -3,16 +3,16 @@ package com.lvv.ttimpex2.molel;
 import org.springframework.util.Assert;
 
 public interface HasId {
-    Integer getId();
+    String getId();
 
-    void setId(Integer id);
+    void setId(String id);
 
     default boolean isNew() {
         return getId() == null;
     }
 
     // doesn't work for hibernate lazy proxy
-    default int id() {
+    default String id() {
         Assert.notNull(getId(), "Entity must has id");
         return getId();
     }

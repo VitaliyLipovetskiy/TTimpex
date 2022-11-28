@@ -1,5 +1,5 @@
 let checked= false;
-let ajaxUrl = "api/employees/daysoff/";
+let ajaxUrl = "api/days_off/employees/";
 let daysOff, columnTos;
 
 const ctx = {
@@ -7,34 +7,6 @@ const ctx = {
     // updateTable: function () {
     //     $.get(ajaxUrl, updateTableByData);
     // }
-}
-
-function getCookie(cookieName) {
-    let results = document.cookie.match('(^|;) ?' + cookieName + '=([^;]*)(;|$)');
-
-    if (results)
-        return (unescape(results[2]));
-    else
-        return null;
-}
-
-function setCookie(name, value, expY, expM, expD, path, domain, secure) {
-    let cookieString = name + "=" + escape (value);
-    if (expY) {
-        let expires = new Date(expY, expM, expD);
-        cookieString += "; expires=" + expires.toGMTString();
-    }
-
-    if (path)
-        cookieString += "; path=" + escape (path);
-
-    if (domain)
-        cookieString += "; domain=" + escape (domain);
-
-    if (secure)
-        cookieString += "; secure";
-
-    document.cookie = cookieString;
 }
 
 $(function() {
@@ -48,7 +20,8 @@ $(function() {
 function choiceDayOff(chkbox, employeeId, day) {
     let checked = chkbox.is(":checked");
     // console.log(day);
-    // console.log(chkbox.is(":checked"));
+    // console.log(checked);
+    // console.log(employeeId);
     // $(chkbox).prop("checked", dayOff);
     // ctx.datatableApi.cell(chkbox.closest('td')).data(chkbox.is(":checked"));
     // console.log(chkbox.closest('td'));
@@ -56,14 +29,14 @@ function choiceDayOff(chkbox, employeeId, day) {
     // // table.cell((id - 1), 1).data(chkbox.is(":checked"));
     let dayOff = {
         'date': $('#filterMonth').val() + (('' + day).length === 1 ? '-0' : '-') + day,
-        'off': checked
+        'dayOff': checked
     };
     // console.log(dayOff);
-
+    // console.log(ajaxUrl + employeeId);
 //  https://stackoverflow.com/a/22213543/548473
     $.ajax({
         url: ajaxUrl + employeeId,
-        type: "POST",
+        type: "PATCH",
         data: JSON.stringify(dayOff),
         dataType: "json",
         contentType: "application/json"
@@ -92,10 +65,10 @@ function initTableByData() {
         data: $('#filter').serialize(),
         success: function(data) {
             let groupColumn = 1;
-            columnTos = data[0];
+            columnTos = data[0].daysOffDto;
             let countDays = columnTos.length;
-            // console.log(data[1]);
-            daysOff = data[1][0].dayOffTo;
+            // console.log(data[0]);
+            // daysOff = data[1][0].dayOffTo;
 
             let days = $('#datatable>thead>tr#days');
             for (let i = 0; i < countDays; i++) {
@@ -104,8 +77,9 @@ function initTableByData() {
 
             columns = [
                 {
-                    data: 'employeeTo.name',
-                    title: '<div class="text-center"><spring:message code="employee.name"/></div>',
+                    data: 'employeeDto.fullName',
+                    // title: '<div class="text-center"><spring:message code="employee.name"/></div>',
+                    // title: '<spring:message code="employee.name"/>',
                     render: function (data, type, row) {
                         if (type === "display") {
                             return  "<div class='align-middle cell-name'>" + data + "</div>";
@@ -115,7 +89,7 @@ function initTableByData() {
                     orderable: false
                 },
                 {
-                    data: 'employeeTo.departmentName',
+                    data: 'employeeDto.departmentName',
                     render: function (data, type, row) {
                         if (type === "display") {
                             if (data == null) {
@@ -131,7 +105,7 @@ function initTableByData() {
                 },
                 {
                     // data: "choice",
-                    title: '<div class="align-middle text-center cell-choice"><input type="checkbox" id="filtered" onClick="selectFilter($(this));"/></div>',
+                    // title: '<div class="align-middle text-center cell-choice"><input type="checkbox" id="filtered" onClick="selectFilter($(this));"/></div>',
                     defaultContent: false,
                     render: function (data, type, row) {
 
@@ -148,7 +122,7 @@ function initTableByData() {
                 let day = columnTos[i];
                 columns.push(
                     {
-                        data: "dayOffTo.dayOf",
+                        data: "dayOffAndWorkedDto.dayOf",
                         title: '<div class="text-center">' + day.dayOfMonth + '<br>' + day.dayOfWeek + '</div>',
                         // title: '<div class="text-center' + ("сб вс".includes(day.dayOfWeek) ? " data-day-off" : "") +'">' + day.dayOfMonth + '<br>' + day.dayOfWeek + '</div>',
                         orderable: false,
@@ -158,16 +132,17 @@ function initTableByData() {
                         },
                         render: function (data, type, row, meta) {
                             if (type === "display") {
-                                let dayOff = row.daysOffTo[meta.col - 3].dayOff;
-                                let worked = row.daysOffTo[meta.col - 3].worked;
+                                let dayOff = row.daysOffDto[meta.col - 3].dayOff;
+                                let worked = row.daysOffDto[meta.col - 3].worked;
+                                // console.log(row);
                                 return "<div class='align-middle text-center cell-choice'>" +
                                     "<input type='checkbox' " + (!worked || dayOff ? "checked" : "") + (!worked ? " disabled" : "") +
-                                    " onclick='choiceDayOff($(this)," + row.employeeTo.id + ", " + (meta.col - 2) +");'/></div>";
+                                    " onclick='choiceDayOff($(this), \"" + row.employeeDto.id + "\", " + (meta.col - 2) +");'/></div>";
                             }
                             return data;
                         },
                         createdCell: function (td, cellData, rowData, row, col) {
-                            if (!rowData.daysOffTo[col - 3].worked) {
+                            if (!rowData.daysOffDto[col - 3].worked) {
                                 $(td).css('background-color', '#898989');
                             }
                             if ('сб вс'.includes(columnTos[col-3].dayOfWeek)) {
@@ -180,7 +155,7 @@ function initTableByData() {
             }
 
             ctx.datatableApi = $('#datatable').DataTable({
-                data: data[1],
+                data: data,
                 columns: columns,
                 order: [[groupColumn,'asc']],
                 paging: false,

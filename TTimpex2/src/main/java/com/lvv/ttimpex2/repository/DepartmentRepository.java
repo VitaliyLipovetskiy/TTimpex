@@ -3,17 +3,15 @@ package com.lvv.ttimpex2.repository;
 import com.lvv.ttimpex2.molel.Department;
 
 import java.util.List;
+import java.util.Optional;
 
-/**
- * @author Vitalii Lypovetskyi
- */
 public interface DepartmentRepository {
 
-    Department save(Department department);
+    Optional<Department> save(Department department);
 
-    boolean delete(int id);
+    Optional<Department> deleteById(String id);
 
-    Department get(int id);
+    Optional<Department> getById(String id);
 
     List<Department> getAll();
 }

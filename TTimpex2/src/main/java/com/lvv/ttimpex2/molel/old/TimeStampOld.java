@@ -11,9 +11,6 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-/**
- * @author Vitalii Lypovetskyi
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

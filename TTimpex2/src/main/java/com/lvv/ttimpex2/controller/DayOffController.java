@@ -1,40 +1,52 @@
 package com.lvv.ttimpex2.controller;
 
+import com.lvv.ttimpex2.dto.*;
 import com.lvv.ttimpex2.molel.DayOff;
+import com.lvv.ttimpex2.molel.EmployeeDate;
 import com.lvv.ttimpex2.service.DayOffService;
-import com.lvv.ttimpex2.service.EmployeeService;
-import com.lvv.ttimpex2.to.ColumnTo;
-import com.lvv.ttimpex2.to.EmployeeDaysOffTo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import com.lvv.ttimpex2.validation.ValidationErrorBuilder;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
+import java.util.UUID;
 
-/**
- * @author Vitalii Lypovetskyi
- */
 @RestController
-@RequestMapping(value = "/api/employees/daysoff", produces = MediaType.APPLICATION_JSON_VALUE)
+@AllArgsConstructor
+@Slf4j
+@RequestMapping(value = DayOffController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@Validated
 public class DayOffController {
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
+    static final String REST_URL = "/api/days_off/employees";
+    static final String WRONG_CREDENTIALS = "Wrong credentials";
     private final DayOffService dayOffService;
-    private final EmployeeService employeeService;
+    private final ModelMapper modelMapper = new ModelMapper();
 
-    public DayOffController(DayOffService dayOffService, EmployeeService employeeService) {
-        this.dayOffService = dayOffService;
-        this.employeeService = employeeService;
-    }
-
+    @Operation(summary = "Get all days off in a month")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Got all days off in a month",
+                    content = { @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = Arrays.class)))}),
+            @ApiResponse(responseCode = "401", description = WRONG_CREDENTIALS,
+                    content = @Content) })
     @GetMapping
-    public Collection[] getBetweenDaysOffTo(@RequestParam @Nullable String filterMonth) {
+    public ResponseEntity<?>  getBetweenDaysOffTo(@RequestParam @Nullable String filterMonth) {
         log.info("getBetweenDaysOffTo {}", filterMonth);
         String[] parts = new String[0];
         if (filterMonth != null) {
@@ -51,32 +63,48 @@ public class DayOffController {
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.plusMonths(1);
 
-//        Collection<EmployeeDaysOffTo> employeeDaysOffToList = new ArrayList<>();
-//        employeeService.getAllEmployedForThePeriod(startDate, endDate)
-//
-//                .forEach(employeeTo -> {
-//                    List<DayOff> daysOffBetween = daysOffRepository.getBetween(startDate, endDate, employeeTo.getId());
-//                    System.out.println("" + employeeTo.getId() + " " + daysOffBetween);
-//                    EmployeeDaysOffTo employeeDaysOffTo = new EmployeeDaysOffTo(employeeTo, daysOffBetween);
-//                    employeeDaysOffToList.add(employeeDaysOffTo);
-//                    System.out.println(employeeDaysOffTo);
-//                });
-//
-//        System.out.println("======");
-//        employeeDaysOffToList.forEach(System.out::println);
-
-        Collection<EmployeeDaysOffTo> employeeDaysOffToList = dayOffService.getAllEmployeesWithDaysOff(startDate, endDate);
-
-        Collection<ColumnTo> columnTos = new ArrayList<>();
-        startDate.datesUntil(endDate).forEach(date -> columnTos.add(new ColumnTo(date)));
-
-        return new Collection[] {columnTos, employeeDaysOffToList};
+        return ResponseEntity.ok(dayOffService.getAllEmployeesWithDaysOff(startDate, endDate));
     }
 
-    @PostMapping(value = "/{employeeId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable int employeeId, @RequestBody DayOff dayOff) {
-        log.info("update {} {}", employeeId, dayOff);
-        dayOffService.update(employeeId, dayOff);
+    @Operation(summary = "Create new department")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Department created",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = DayOffAndWorkedDto.class)) }),
+            @ApiResponse(responseCode = "401", description = WRONG_CREDENTIALS,
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Unable to find department",
+                    content = @Content),
+            @ApiResponse(responseCode = "409", description = "Unable to save department",
+                    content = @Content)})
+    @PatchMapping(value = "/{employeeId}")
+    @Validated
+    public ResponseEntity<?> updateDayOffByEmployeeId(
+            HttpServletRequest request,
+            @Valid @PathVariable UUID employeeId,
+            @Valid @RequestBody UpdateDayOfDto dto,
+            Errors errors) {
+        log.info("update day off by employeeId {} {}", employeeId, dto);
+        if (errors.hasErrors()) {
+            log.info("Validation error with request: " + request.getRequestURI());
+            return ResponseEntity.badRequest().body(ValidationErrorBuilder.fromBindingErrors(errors));
+        }
+        DayOff dayOff = dayOffService.updateDayOffByEmployeeId(employeeId, convertToDayOf(dto));
+
+        log.info("dayOff {}", dayOff);
+
+        return ResponseEntity.ok(convertToDto(DayOffAndWorkedDto.class, dayOff));
     }
+
+    private DayOff convertToDayOf(UpdateDayOfDto dto) {
+        EmployeeDate employeeDate = modelMapper.map(dto, EmployeeDate.class);
+        DayOff dayOff = modelMapper.map(dto, DayOff.class);
+        dayOff.setEmployeeDate(employeeDate);
+        return dayOff;
+    }
+
+    private <T> T convertToDto(Class<T> clazz, DayOff dayOff) {
+        return modelMapper.map(dayOff, clazz);
+    }
+
 }

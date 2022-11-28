@@ -20,9 +20,6 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author Vitalii Lypovetskyi
- */
 @Configuration
 //@EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {

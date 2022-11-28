@@ -2,18 +2,28 @@ spring:
   application:
     name: ttimpex
   datasource:
-    url: jdbc:postgresql://localhost:5432/timestamp?currentSchema=timestamp
-    username: postgres
-    password: password
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/timestamp?currentSchema=timestamp}
+    username: ${JDBC_DATABASE_USERNAME:postgres}
+    password: ${JDBC_DATABASE_PASSWORD:password}
   jpa:
     hibernate:
       ddl-auto: update
-#  jackson:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        default_schema: timestamp
+    defer-datasource-initialization: true
+  #  jackson:
 #    serialization:
 #      write-dates-as-timestamps: false
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
 
 server:
-  port: 8089
+  port: 8080
 
 app:
   path-db: C:\TREZOR2\DATA
@@ -22,4 +32,8 @@ app:
   time:
     start: 7
     end: 20
+
+springdoc:
+  api-docs:
+    path: /api-docs
 

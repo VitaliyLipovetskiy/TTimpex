@@ -1,63 +1,30 @@
 package com.lvv.ttimpex2.molel;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.lvv.ttimpex2.utils.json.DayOffDeserializer;
+import lombok.*;
 
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-/**
- * @author Vitalii Lypovetskyi
- */
-@JsonDeserialize(using = DayOffDeserializer.class)
+@Entity
+@Table(name = "days_off", schema = "timestamp")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+//@JsonDeserialize(using = DayOffDeserializer.class)
 public class DayOff implements Serializable {
-    private Employee employee;
-    private LocalDate date;
+    @EmbeddedId
+    private EmployeeDate employeeDate;
+    @Column(name = "day_off")
     private Boolean dayOff;
 
-    public DayOff() {}
-
-    public DayOff(Employee employee, LocalDate date, Boolean dayOff) {
-        this.employee = employee;
-        this.date = date;
-        this.dayOff = dayOff;
-    }
-
-    public DayOff(LocalDate date) {
-        this.date = date;
+    public DayOff(Employee employee, LocalDate date) {
+        this.employeeDate = new EmployeeDate(employee, date);
         this.dayOff = false;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
-
-    public Boolean getDayOff() {
-        return dayOff;
-    }
-
-    public void setDayOff(Boolean dayOff) {
-        this.dayOff = dayOff;
-    }
-
-    @Override
-    public String toString() {
-        return "DayOff{" +
-                "employee=" + employee +
-                ", date=" + date +
-                ", dayOff=" + dayOff +
-                '}';
     }
 }

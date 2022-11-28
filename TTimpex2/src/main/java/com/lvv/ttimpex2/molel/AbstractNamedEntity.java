@@ -1,15 +1,13 @@
 package com.lvv.ttimpex2.molel;
 
-/**
- * @author Vitalii Lypovetskyi
- */
+
 public abstract class AbstractNamedEntity extends AbstractBaseEntity {
 
     protected String name;
 
     protected AbstractNamedEntity() {}
 
-    protected AbstractNamedEntity(Integer id, String name) {
+    protected AbstractNamedEntity(String id, String name) {
         super(id);
         this.name = name;
     }

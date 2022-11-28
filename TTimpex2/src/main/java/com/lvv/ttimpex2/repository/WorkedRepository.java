@@ -5,27 +5,25 @@ import com.lvv.ttimpex2.molel.Worked;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-/**
- * @author Vitalii Lypovetskyi
- */
 public interface WorkedRepository {
 
-    boolean save(Worked worked);
+    Optional<Worked> saveWorked(Worked worked);
 
 //     boolean delete(int id);
 //
 //     boolean worked(int id);
 
-    Map<Integer, Worked> getAllEmployedForThePeriod(LocalDate startDate, LocalDate endDate);
+    List<Worked> getFirstWorkedForThePeriod(LocalDate startDate, LocalDate endDate);
 
-    Map<Integer, List<Worked>> getAllEmployeeBetween(LocalDate startDate, LocalDate endDate);
+    Map<String, List<Worked>> getAllWorkersBetween(LocalDate startDate, LocalDate endDate);
 
-    Map<Integer, Worked> getAllEmployed();
+    List<Worked> getAllWorkers();
 
-    Worked getLast(int id);
+    Optional<Worked> getLastWorkedByEmployeeId(String id);
 
-    List<Worked> getHistory(int id);
+//    List<Worked> getHistory(String id);
 
 //     List<Worked> getAll();
 //

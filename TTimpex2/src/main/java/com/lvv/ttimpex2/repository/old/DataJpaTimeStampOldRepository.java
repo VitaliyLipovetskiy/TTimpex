@@ -1,14 +1,10 @@
 package com.lvv.ttimpex2.repository.old;
 
-import com.lvv.ttimpex2.molel.old.SCodeOld;
 import com.lvv.ttimpex2.molel.old.TimeStampOld;
-import com.lvv.ttimpex2.to.old.TimeStampOldTo;
+import com.lvv.ttimpex2.dto.old.TimeStampOldTo;
 
 import java.util.List;
 
-/**
- * @author Vitalii Lypovetskyi
- */
 //@Repository
 public interface DataJpaTimeStampOldRepository //extends PagingAndSortingRepository<TimeStamp, String>,
 //        JpaSpecificationExecutor<TimeStamp>
