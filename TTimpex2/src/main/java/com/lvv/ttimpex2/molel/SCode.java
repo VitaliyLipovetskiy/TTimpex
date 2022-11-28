@@ -1,6 +1,5 @@
 package com.lvv.ttimpex2.molel;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;

@@ -1,6 +1,5 @@
 package com.lvv.ttimpex2.service;
 
-import com.lvv.ttimpex2.repository.old.DataJpaTimeStampOldRepository;
 import com.lvv.ttimpex2.service.handlers.ParadoxHandler;
 import com.lvv.ttimpex2.utils.UtilsDB;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +17,6 @@ import java.time.LocalTime;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import static org.slf4j.LoggerFactory.getLogger;
-
 
 //@AllArgsConstructor
 @Slf4j

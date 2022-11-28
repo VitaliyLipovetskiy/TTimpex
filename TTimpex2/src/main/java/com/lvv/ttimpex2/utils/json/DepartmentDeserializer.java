@@ -6,9 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.lvv.ttimpex2.molel.Department;
 
-
 import java.io.IOException;
-
 
 public class DepartmentDeserializer extends StdDeserializer<Department> {
     private static final long serialVersionUID = 1L;

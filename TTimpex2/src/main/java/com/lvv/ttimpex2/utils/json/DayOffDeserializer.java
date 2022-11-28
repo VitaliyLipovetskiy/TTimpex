@@ -11,7 +11,6 @@ import com.lvv.ttimpex2.molel.EmployeeDate;
 import java.io.IOException;
 import java.time.LocalDate;
 
-
 public class DayOffDeserializer extends StdDeserializer<DayOff> {
     private static final long serialVersionUID = 1L;
 
