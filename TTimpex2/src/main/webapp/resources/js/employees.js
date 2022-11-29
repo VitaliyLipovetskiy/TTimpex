@@ -1,6 +1,6 @@
 const employeesAjaxUrl = "api/employees/";
 const departmentAjaxUrl = "api/departments/";
-// const workedAjaxUrl = "api/worked/";
+const scodeAjaxUrl = "api/scodes/empty";
 const departments = [];
 
 const ctx = {
@@ -202,7 +202,6 @@ $(function () {
 
         }
     });
-
 });
 
 function save() {
@@ -211,14 +210,17 @@ function save() {
     // console.log(data);
     let dataForm = {};
     let id = data.find(v => v.name === 'id').value;
-    let type = "PATCH";
+    let method = "PATCH";
     if (id === '') {
-        type = "POST";
+        method = "POST";
     }
     dataForm.firstName = data.find(v => v.name === 'firstName').value;
     dataForm.lastName = data.find(v => v.name === 'lastName').value;
     dataForm.middleName = data.find(v => v.name === 'middleName').value;
-    // dataForm.cardId = data.find(v => v.name === 'cardId').value;
+    let card = $('#card option:selected');
+    if (card.val() !== '0' && card.val() !== undefined) {
+        dataForm.cardId = card.val();
+    }
     let department = $('#department option:selected');
     if (department.val() !== '0' && department.val() !== undefined) {
         // dataForm.departmentId = null;
@@ -241,7 +243,7 @@ function save() {
     // console.log(type);
     // console.log(ctx.ajaxUrl + id);
     $.ajax({
-        type: type,
+        type: method,
         url: ctx.ajaxUrl + id,
         data: JSON.stringify(dataForm),
         dataType: "json",
@@ -253,7 +255,7 @@ function save() {
     });
 }
 
-function updateDepartments() {
+function getOptionDepartments() {
     $.get(departmentAjaxUrl,
         function (data) {
             $.each(data, function (key, value) {
@@ -265,12 +267,27 @@ function updateDepartments() {
         });
 }
 
+function getOptionCards(cards) {
+    let elementCards = $('#card');
+    elementCards.empty();
+    elementCards.append('<option value="0"></option>')
+    for (let i = 0; i < cards.length; i++) {
+        elementCards.append('<option value="' + cards[i].id + '">' + cards[i].id + '</option>')
+    }
+    $.get(scodeAjaxUrl, function (data) {
+        $.each(data, function (key, value) {
+            elementCards.append('<option value="' + value.id + '">' + value.id + '</option>')
+        });
+    });
+}
+
 function updateRow(id) {
     form.find(":input").val("");
     $("#modalTitle").html(i18n["editTitle"]);
-    updateDepartments();
+    getOptionDepartments();
     $.get(ctx.ajaxUrl + id, function (data) {
         // console.log(data);
+        getOptionCards(data.cards);
         $.each(data, function (key, value) {
             if (key === 'department') {
                 if (data.department !== null) {
@@ -287,6 +304,11 @@ function updateRow(id) {
             if (key === 'dismissal') {
                 $("#dismissal").prop('readonly', value !== null);
             }
+            if (key === 'cards') {
+                if (value.length > 0) {
+                    $('select[id=card]').val(value[0].id);
+                }
+            }
             // console.log(key + "=>" + form.find("input[name='" + key + "']").val());
         });
         // $.get(workedAjaxUrl + id, function (data) {
@@ -296,6 +318,11 @@ function updateRow(id) {
         // });
         $('#editRow').modal();
     });
+}
+
+function addRow() {
+    getOptionDepartments();
+    getOptionCards();
 }
 
 function selectFilter(chkbox) {

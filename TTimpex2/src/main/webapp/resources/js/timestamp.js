@@ -102,7 +102,7 @@ function updateCell() {
             month: "long",
             day: "numeric"
         });
-        console.log(cellData.penalty);
+        // console.log(cellData.penalty);
         $('#title').val(rowData.name.split('<br>')[0] + ' (' + formatter.format(new Date(cellData.date)) + ')');
         $("#worked").prop("checked", cellData.worked);
         if (cellData.worked) {
@@ -143,7 +143,7 @@ function save() {
         dataForm.penalty = $('#penalty').val();
     }
     dataForm.workedOut = $('#workedOut').val();
-    console.log(dataForm);
+    // console.log(dataForm);
 
     $.ajax({
         type: "PATCH",

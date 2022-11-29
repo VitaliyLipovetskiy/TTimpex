@@ -3,6 +3,7 @@ package com.lvv.ttimpex2.repository;
 import com.lvv.ttimpex2.molel.Employee;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 
     @Override
     public List<Employee> getAll() {
-        return employeeRepository.findAll();
+        return employeeRepository.findAll(Sort.by("department").and(Sort.by("lastName")));
     }
 
     @Override

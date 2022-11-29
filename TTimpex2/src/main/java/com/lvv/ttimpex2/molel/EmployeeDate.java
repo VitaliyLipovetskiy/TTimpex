@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class EmployeeDate implements Serializable {
     @JoinColumn(name = "employee_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    private transient Employee employee;
+    private Employee employee;
     @Column(name = "date", nullable = false)
     private LocalDate date;
 }

@@ -20,7 +20,7 @@
             <thead>
             <tr class="text-center">
                 <th class="align-middle text-center"><spring:message code="employee.name"/></th>
-                <th class="align-middle text-center"><spring:message code="employee.cardOld"/></th>
+                <th class="align-middle text-center"><spring:message code="scode.card"/></th>
                 <th class="align-middle text-center"><spring:message code="employee.department"/></th>
                 <th class="align-middle text-center" style="width: 50px"><spring:message code="employee.startTime"/></th>
                 <th class="align-middle text-center" style="width: 50px"><spring:message code="employee.endTime"/></th>
@@ -86,9 +86,10 @@
                             </div>
 
                             <div class="form-group col-sm-4">
-                                <label for="cardOld" class="col-form-label"><spring:message code="employee.cardOld"/></label>
-                                <input type="email" class="form-control" id="cardOld" name="cardId"
-                                       placeholder="<spring:message code="employee.cardOld"/>">
+                                <label for="card" class="col-form-label"><spring:message code="scode.card"/></label>
+                                <select class="custom-select mr-sm-2" id="card">
+<%--                                    <option selected value="0"></option>--%>
+                                </select>
                             </div>
                         </div>
                     </div>

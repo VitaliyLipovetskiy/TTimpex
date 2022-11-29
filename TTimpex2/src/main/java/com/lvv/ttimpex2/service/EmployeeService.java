@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.apache.logging.log4j.ThreadContext.isEmpty;
 
@@ -81,6 +82,9 @@ public class EmployeeService implements ParadoxHandler {
         employee.setStartTime(employeeDto.getStartTime());
         employee.setEndTime(employeeDto.getEndTime());
         employee.setAccountingForHoursWorked(employeeDto.getAccountingForHoursWorked());
+//        if (employeeDto.getCardId() != null && !Objects.equals(employeeDto.getCardId(), employee.getCardId())) {
+//            employee.setCardId(employeeDto.getCardId());
+//        }
         return saveEmployee(employee);
     }
 
@@ -107,9 +111,6 @@ public class EmployeeService implements ParadoxHandler {
                 employee.setDepartment(departmentService.getDepartmentById(employeeDto.getDepartmentId()));
             }
         }
-//        if (employeeDto.getCardId() != null && !Objects.equals(employeeDto.getCardId(), employee.getCardId())) {
-//            employee.setCardId(employeeDto.getCardId());
-//        }
         if (employeeDto.getStartTime() != null && !Objects.equals(employeeDto.getStartTime(), employee.getStartTime())) {
             employee.setStartTime(employeeDto.getStartTime());
         }
@@ -118,6 +119,11 @@ public class EmployeeService implements ParadoxHandler {
         }
         if (employeeDto.getAccountingForHoursWorked() != null && !Objects.equals(employeeDto.getAccountingForHoursWorked(), employee.getAccountingForHoursWorked())) {
             employee.setAccountingForHoursWorked(employeeDto.getAccountingForHoursWorked());
+        }
+        if (employeeDto.getCardId() != null && !employee.getCards().stream().map(SCode::getId).collect(Collectors.toList()).contains(employeeDto.getCardId())) {
+            SCode sCode = sCodeService.findById(employeeDto.getCardId());
+            sCode.setEmployee(employee);
+            sCodeService.saveSCode(sCode);
         }
         return saveEmployee(employee);
     }

@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,8 +26,11 @@ public class DayOffRepositoryImpl implements DayOffRepository {
     @Override
     public Map<String, Map<LocalDate, DayOffAndWorkedDto>> getAllEmployeeWithDaysOffBetween(LocalDate startDate, LocalDate endDate) {
         Map<String, Map<LocalDate, DayOffAndWorkedDto>> result = new ConcurrentHashMap<>();
+
         dayOffRepository.findAll().forEach(dayOff -> {
+//            System.out.println(dayOff);
             Employee employee = dayOff.getEmployeeDate().getEmployee();
+//            System.out.println(employee);
             Map<LocalDate, DayOffAndWorkedDto> mapDaysOffDto = result.get(employee.id());
             if (mapDaysOffDto == null) {
                 mapDaysOffDto = new ConcurrentHashMap<>();
@@ -48,5 +52,10 @@ public class DayOffRepositoryImpl implements DayOffRepository {
     @Override
     public DayOff saveDayOff(DayOff dayOff) {
         return dayOffRepository.save(dayOff);
+    }
+
+    @Override
+    public List<DayOff> getAll() {
+        return dayOffRepository.findAll();
     }
 }

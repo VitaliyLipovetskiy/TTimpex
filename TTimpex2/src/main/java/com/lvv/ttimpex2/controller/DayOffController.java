@@ -42,7 +42,7 @@ public class DayOffController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Got all days off in a month",
                     content = { @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = Arrays.class)))}),
+                            array = @ArraySchema(schema = @Schema(implementation = EmployeeDaysOffTo.class)))}),
             @ApiResponse(responseCode = "401", description = WRONG_CREDENTIALS,
                     content = @Content) })
     @GetMapping

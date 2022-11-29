@@ -42,6 +42,7 @@ public class SCodeService implements ParadoxHandler {
     public List<SCode> findAllSCodesWithEmptyEmployee() {
         return findAllSCodes().stream()
                 .filter(sCode -> sCode.getEmployee() == null)
+                .sorted((s1, s2) -> s1.getId().compareTo(s2.getId()))
                 .collect(Collectors.toList());
     }
 

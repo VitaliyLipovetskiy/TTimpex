@@ -162,7 +162,7 @@ public class SCodeController {
                     content = @Content)})
     @PatchMapping("/{id}")
     @Validated
-    public ResponseEntity<?> updateEmployee(
+    public ResponseEntity<?> updateSCode(
             HttpServletRequest request,
             @RequestBody @Valid UpdateSCodeDto dto,
             @PathVariable String id, Errors errors) {
@@ -179,6 +179,31 @@ public class SCodeController {
 //    }
 //        throw new ApplicationException(HttpStatus.UNAUTHORIZED, WRONG_CREDENTIALS);
         return ResponseEntity.ok(convertToDto(ShortSCodeDto.class, sCodeService.updateSCode(sCode)));
+    }
+
+    @Operation(summary = "Clear employee in sCode")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cleaned employee in sCode",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ShortSCodeDto.class))}),
+            @ApiResponse(responseCode = "401", description = WRONG_CREDENTIALS,
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Unable to find sCode",
+                    content = @Content),
+            @ApiResponse(responseCode = "409", description = "Unable to save sCode",
+                    content = @Content)})
+    @PatchMapping("/clear/{id}")
+    @Validated
+    public ResponseEntity<?> clearEmployeeInSCode(
+            @PathVariable String id) {
+        log.info("Clear employee in sCode by id {}", id);
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        if (auth != null) {
+        SCode sCode = sCodeService.findById(id);
+        sCode.setEmployee(null);
+//    }
+//        throw new ApplicationException(HttpStatus.UNAUTHORIZED, WRONG_CREDENTIALS);
+        return ResponseEntity.ok(convertToDto(ShortSCodeDto.class, sCodeService.saveSCode(sCode)));
     }
 
     @Operation(summary = "Delete scode by id")

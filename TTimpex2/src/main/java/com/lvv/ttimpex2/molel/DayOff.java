@@ -1,5 +1,7 @@
 package com.lvv.ttimpex2.molel;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.lvv.ttimpex2.utils.json.DayOffDeserializer;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -16,7 +18,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-//@JsonDeserialize(using = DayOffDeserializer.class)
+@JsonDeserialize(using = DayOffDeserializer.class)
 public class DayOff implements Serializable {
     @EmbeddedId
     private EmployeeDate employeeDate;
@@ -24,7 +26,10 @@ public class DayOff implements Serializable {
     private Boolean dayOff;
 
     public DayOff(Employee employee, LocalDate date) {
-        this.employeeDate = new EmployeeDate(employee, date);
-        this.dayOff = false;
+        this(new EmployeeDate(employee, date), false);
+    }
+
+    public DayOff(Employee employee, LocalDate date, Boolean dayOff) {
+        this(new EmployeeDate(employee, date), dayOff);
     }
 }

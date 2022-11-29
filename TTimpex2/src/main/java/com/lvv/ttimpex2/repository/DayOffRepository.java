@@ -5,6 +5,7 @@ import com.lvv.ttimpex2.dto.DayOffAndWorkedDto;
 import com.lvv.ttimpex2.molel.EmployeeDate;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -23,4 +24,6 @@ public interface DayOffRepository {
     Map<String, Map<LocalDate, DayOffAndWorkedDto>> getAllEmployeeWithDaysOffBetween(LocalDate startDate, LocalDate endDate);
 
     DayOff saveDayOff(DayOff dayOff);
+
+    List<DayOff> getAll();
 }

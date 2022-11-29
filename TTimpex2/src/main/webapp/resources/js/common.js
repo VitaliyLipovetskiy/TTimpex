@@ -39,7 +39,8 @@ function selectFilter(chkbox) {
 function add() {
     $("#modalTitle").html(i18n["addTitle"]);
     form.find(":input").val("");
-    updateDepartments();
+    addRow();
+    // updateDepartments();
     $("#editRow").modal();
 }
 
