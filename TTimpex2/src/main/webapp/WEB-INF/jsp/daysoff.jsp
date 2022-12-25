@@ -44,11 +44,14 @@
         <table class="table table-striped table-bordered table-sm" id="datatable">
             <thead>
             <tr id="days" class="text-center">
-                <th class="align-middle text-center"></th>
-<%--                <th class="align-middle text-center"><spring:message code="employee.name"/></th>--%>
+<%--                <th class="align-middle text-center"></th>--%>
+                <th class="align-middle text-center"><spring:message code="employee.name"/></th>
                 <th class="align-middle text-center"></th>
 <%--                <th class="align-middle text-center"><spring:message code="employee.department"/></th>--%>
                 <th class="align-middle">
+                    <div class="align-middle text-center cell-choice">
+                        <input type="checkbox" id="filtered" onClick="selectFilter($(this));"/>
+                    </div>
 <%--                    <div class='align-middle text-center cell-choice'>--%>
 <%--                        <input type='checkbox' id="filtered" onclick="selectFilter($(this));"/>--%>
 <%--                    </div>--%>

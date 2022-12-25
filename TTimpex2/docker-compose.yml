@@ -1,0 +1,46 @@
+version: '3.9'
+
+volumes:
+  postgres_data:
+
+services:
+  storage:
+    image: 'postgres:13.7'
+    container_name: storage
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/psql_dump.sql:/docker-entrypoint-initdb.d/psql_dump.sql
+    expose:
+      - 5432
+#    ports:
+#      - '7432:5432'
+    healthcheck:
+      test: [ 'CMD-SHELL', 'su postgres', '&&', 'pg_isready' ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    environment:
+      POSTGRES_DB: timestamp
+      POSTGRES_PASSWORD: password
+
+  app:
+    build:
+#      context: .
+      dockerfile: Dockerfile
+    container_name: app
+    ports:
+      - '8088:8088'
+    depends_on:
+      storage:
+        condition: service_healthy
+    environment:
+      - JDBC_DATABASE_URL=jdbc:postgresql://storage:5432/timestamp?currentSchema=timestamp
+      - JDBC_DATABASE_USERNAME=postgres
+      - JDBC_DATABASE_PASSWORD=password
+      - JWT_HEADER=Authorization
+      - JWT_SECRET=CHANGE_ME
+      - JWT_EXPIRATION=10080
+      - PORT=8088
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'

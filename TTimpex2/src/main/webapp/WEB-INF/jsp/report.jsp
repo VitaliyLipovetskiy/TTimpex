@@ -13,7 +13,7 @@
     <div class="container-fluid">
         <h3 class="text-center"><spring:message code="app.title"/></h3>
         <%--https://getbootstrap.com/docs/4.0/components/cardOld/--%>
-        <div class="cardOld border-dark">
+        <div class="cardOld border-dark" hidden>
             <div class="cardOld-body pb-0">
                 <form id="filter">
                     <div class="row">
@@ -78,8 +78,53 @@
             <div class="modal-body">
                 <form id="detailsForm">
                     <input type="hidden" id="id" name="id">
+                    <input type="hidden" id="date" name="date">
 
-
+                    <div class="container-fluid">
+                        <div class="form-group row col-sm-12">
+                            <input type="text" readonly class="form-control-plaintext form-control-lg" id="title" name="title">
+                        </div>
+                        <div class="form-group row">
+                            <label for="comingCorrectTime" class="col-sm-4 col-form-label"><spring:message code="employee.comingCorrectTime"/></label>
+                            <div class="col-sm-4">
+                                <input type="time" class="form-control" id="comingCorrectTime" name="comingCorrectTime">
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="time" class="form-control" id="comingAutoTime" name="comingAutoTime" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="leavingCorrectTime" class="col-sm-4 col-form-label"><spring:message code="employee.leavingCorrectTime"/></label>
+                            <div class="col-sm-4">
+                                <input type="time" class="form-control" id="leavingCorrectTime" name="leavingCorrectTime">
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="time" class="form-control" id="leavingAutoTime" name="leavingAutoTime" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="penalty" class="col-sm-4 col-form-label"><spring:message code="employee.penalty"/></label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" id="penalty" name="penalty">
+                            </div>
+                        </div>
+                        <div class="form-group row worked-out">
+                            <label for="workedOut" class="col-sm-4 col-form-label"><spring:message code="employee.workedOut"/></label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" id="workedOut" name="workedOut">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-sm-4 offset-sm-4" >
+                                <input type="checkbox" class="form-check-input" id="dayOff" name="dayOff" disabled>
+                                <label for="dayOff" class="form-check-label"><spring:message code="employee.dayOff"/></label>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <input type="checkbox" class="form-check-input" id="worked" name="worked" disabled>
+                                <label for="worked" class="form-check-label"><spring:message code="employee.worked"/></label>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">

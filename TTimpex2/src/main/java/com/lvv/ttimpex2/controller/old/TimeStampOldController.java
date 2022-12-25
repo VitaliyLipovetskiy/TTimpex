@@ -1,9 +1,8 @@
 package com.lvv.ttimpex2.controller.old;
 
-import com.lvv.ttimpex2.molel.old.SCodeOld;
 import com.lvv.ttimpex2.molel.old.TimeStampOld;
 import com.lvv.ttimpex2.service.old.TimeStampOldService;
-import com.lvv.ttimpex2.to.old.TimeStampOldTo;
+import com.lvv.ttimpex2.dto.old.TimeStampOldTo;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author Vitalii Lypovetskyi
- */
 //@RestController
 //@RequestMapping("/rest")
 public final class TimeStampOldController {

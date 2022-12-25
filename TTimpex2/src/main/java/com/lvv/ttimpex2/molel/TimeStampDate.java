@@ -1,34 +1,32 @@
 package com.lvv.ttimpex2.molel;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.validation.constraints.Positive;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
-/**
- * @author Vitalii Lypovetskyi
- */
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-//@Entity
-//@Table(name = "timestampdate", schema = "timestamp")
+@Getter
+@Setter
+@ToString
+@Entity
+@Table(name = "timestampdate", schema = "timestamp")
 public class TimeStampDate {
-
+    @EmbeddedId
     private EmployeeDate employeeDate;
+    @Column(name = "coming")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalTime coming;   // приход корректировка
+    @Column(name = "leaving")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalTime leaving;  // уход корректировка
+    @Column(name = "penalty")
+    @Positive
     private Integer penalty;       // штраф корректировка
-
-    @Override
-    public String toString() {
-        return "TimeStampDate{" +
-                "employeeDate=" + employeeDate +
-                ", coming=" + coming +
-                ", leaving=" + leaving +
-                ", penalty=" + penalty +
-                '}';
-    }
 }

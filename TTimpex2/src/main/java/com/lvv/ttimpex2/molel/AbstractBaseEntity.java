@@ -1,29 +1,24 @@
 package com.lvv.ttimpex2.molel;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
 import java.util.Objects;
 
-/**
- * @author Vitalii Lypovetskyi
- */
 //@Access(AccessType.FIELD)
 public abstract class AbstractBaseEntity implements HasId {
-    protected  Integer id;
+    protected String id;
 
     protected AbstractBaseEntity() {}
 
-    protected AbstractBaseEntity(Integer id) {
+    protected AbstractBaseEntity(String id) {
         this.id = id;
     }
 
     @Override
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
     @Override
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -42,6 +37,6 @@ public abstract class AbstractBaseEntity implements HasId {
 
     @Override
     public int hashCode() {
-        return id == null ? 0 : id;
+        return id == null ? 0 : id.hashCode();
     }
 }

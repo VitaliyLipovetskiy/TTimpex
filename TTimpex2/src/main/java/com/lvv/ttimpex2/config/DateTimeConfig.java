@@ -1,7 +1,6 @@
 package com.lvv.ttimpex2.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.format.datetime.DateFormatter;
 import org.springframework.format.datetime.DateFormatterRegistrar;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
@@ -12,9 +11,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 
 import java.time.format.DateTimeFormatter;
 
-/**
- * @author Vitalii Lypovetskyi
- */
 //@Configuration
 public class DateTimeConfig extends WebMvcConfigurationSupport {
 

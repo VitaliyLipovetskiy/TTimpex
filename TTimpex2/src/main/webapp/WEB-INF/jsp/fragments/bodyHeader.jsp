@@ -24,6 +24,9 @@
                             <a class="btn btn-info mr-1" href="employees">
                                 <spring:message code="employee.title"/>
                             </a>
+                            <a class="btn btn-info mr-1" href="scodes">
+                                <spring:message code="scode.title"/>
+                            </a>
                             <a class="btn btn-info mr-1" href="users">
                                 <spring:message code="user.title"/>
                             </a>

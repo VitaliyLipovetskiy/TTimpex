@@ -1,37 +1,36 @@
 package com.lvv.ttimpex2.molel;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-/**
- * @author Vitalii Lypovetskyi
- */
-@Data
+@Entity
+@Table(name = "s_code", schema = "timestamp")
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-//@Entity
-//@Table(name = "s_code", schema = "timestamp")
+@ToString
 public final class SCode {
-//    @Id
-//    @Column(name = "card")
+    @Id
+    @Column(name = "card")
     @NotNull
     @Size(min = 4, max = 4)
     private String id;
     @NotNull
     @Size(min = 8, max = 8)
-//    @Column(name = "s_code")
+    @Column(name = "s_code")
     private String sCode;
+//    @Column(length = 36, nullable = true, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id")
+    @ToString.Exclude
+    private Employee employee;
 
-    @Override
-    public String toString() {
-        return "SCode{" +
-                "card='" + id + '\'' +
-                ", sCode='" + sCode + '\'' +
-                '}';
+    public SCode(String id, String sCode) {
+        this(id, sCode, null);
     }
 
     //    CREATE TABLE TRZ_SC (

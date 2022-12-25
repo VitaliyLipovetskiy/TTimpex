@@ -6,14 +6,11 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.lvv.ttimpex2.molel.DayOff;
-import com.lvv.ttimpex2.molel.Department;
+import com.lvv.ttimpex2.molel.EmployeeDate;
 
 import java.io.IOException;
 import java.time.LocalDate;
 
-/**
- * @author Vitalii Lypovetskyi
- */
 public class DayOffDeserializer extends StdDeserializer<DayOff> {
     private static final long serialVersionUID = 1L;
 
@@ -29,8 +26,11 @@ public class DayOffDeserializer extends StdDeserializer<DayOff> {
     public DayOff deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
+        System.out.println(node);
+        JsonNode jsonNode = node.get("employee_date");
+
         DayOff dayOff = new DayOff();
-        dayOff.setDate(LocalDate.parse(node.get("date").asText()));
+        dayOff.setEmployeeDate(new EmployeeDate(null, LocalDate.parse(node.get("date").asText())));
         dayOff.setDayOff(node.get("off").asBoolean());
 
         return dayOff;

@@ -1,28 +1,22 @@
 package com.lvv.ttimpex2.molel;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Embeddable;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-/**
- * @author Vitalii Lypovetskyi
- */
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-//@Embeddable
-public class EmployeeDate {
+@Getter
+@Setter
+@Embeddable
+@EqualsAndHashCode
+@ToString
+public class EmployeeDate implements Serializable {
+    @JoinColumn(name = "employee_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Employee employee;
+    @Column(name = "date", nullable = false)
     private LocalDate date;
-
-    @Override
-    public String toString() {
-        return "EmployeeDate{" +
-                "employee=" + employee +
-                ", date=" + date +
-                '}';
-    }
 }

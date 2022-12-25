@@ -2,6 +2,7 @@ package com.lvv.ttimpex2.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,13 +17,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author Vitalii Lypovetskyi
- */
 @Configuration
 //@EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {
@@ -49,7 +47,7 @@ public class SpringConfig implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        StringHttpMessageConverter stringConverter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
+        StringHttpMessageConverter stringConverter = new StringHttpMessageConverter(StandardCharsets.UTF_8);
         stringConverter.setSupportedMediaTypes(Arrays.asList(MediaType.TEXT_PLAIN, MediaType.TEXT_HTML));
         converters.add(stringConverter);
         MappingJackson2HttpMessageConverter jsonConverter = new MappingJackson2HttpMessageConverter();
@@ -82,4 +80,9 @@ public class SpringConfig implements WebMvcConfigurer {
 //    public JdbcTemplate jdbcTemplate() {
 //        return new JdbcTemplate(dataSource());
 //    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
 }

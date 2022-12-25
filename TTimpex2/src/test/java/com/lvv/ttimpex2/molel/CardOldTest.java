@@ -1,6 +1,5 @@
 package com.lvv.ttimpex2.molel;
 
-import com.lvv.ttimpex2.molel.old.CardOld;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -12,9 +11,7 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
-/**
- * @author Vitalii Lypovetskyi
- */
+
 public class CardOldTest {
 //    private static Validator validator;
 //

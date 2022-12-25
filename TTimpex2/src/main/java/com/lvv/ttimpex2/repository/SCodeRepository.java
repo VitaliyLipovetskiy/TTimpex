@@ -2,15 +2,14 @@ package com.lvv.ttimpex2.repository;
 
 import com.lvv.ttimpex2.molel.SCode;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
-/**
- * @author Vitalii Lypovetskyi
- */
 public interface SCodeRepository {
-
-    SCode save(SCode entity);
-    boolean delete(String id);
-    SCode get(String id);
-    Collection<SCode> getCollection();
+    Optional<SCode> findById(String id);
+    List<SCode> findAllByEmployeeId(String id);
+    Optional<SCode> saveSCode(SCode entity);
+    boolean deleteSCodeById(String id);
+    List<SCode> findAllSCodes();
+    Optional<SCode> deleteById(String id);
 }
