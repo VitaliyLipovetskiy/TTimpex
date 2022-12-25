@@ -142,9 +142,10 @@ public class EmployeeService implements ParadoxHandler {
                 Employee newEmployee = null;
                 try {
                     newEmployee = new Employee(null,
-                            resultSet.getString("I").trim(),
-                            resultSet.getString("F").trim(),
-                            "null".equals(resultSet.getString("O")) ? null : resultSet.getString("O").trim(),
+                            resultSet.getString("I"),
+                            resultSet.getString("F"),
+                            resultSet.getString("O"),
+//                            "null".equals(resultSet.getString("O")) ? null : resultSet.getString("O").trim(),
                             null, null, null, false, null
                     );
                 } catch (SQLException e) {

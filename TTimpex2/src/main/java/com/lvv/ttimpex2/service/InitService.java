@@ -48,20 +48,25 @@ public class InitService {
     }
 
     public Boolean checkingTimeStampWithParadoxDB(InitTimeStampDto dto) {
-        String path = UtilsDB.pathDB(externalProperties);
-        for (LocalDate localDate = dto.getStartDate(); localDate.isBefore(dto.getEndDate().plusDays(1)); localDate = localDate.plusDays(1)) {
-            String year = String.valueOf(localDate.getYear()).substring(2);
-            String month = String.valueOf(localDate.getMonthValue());
-            String day = String.valueOf(localDate.getDayOfMonth());
-            String fileDB = "D" + (day.length() == 1 ? "0" : "") + day + (month.length() == 1 ? "0" : "") + month + "_" + year;
-            Path pathDB = Paths.get( path + fileDB + ".DB");
-            if (Files.exists(pathDB)) {
-                log.info(pathDB.toString());
-                ParadoxService.tableParadoxHandler(pathDB, timeStampService, localDate);
-            } else {
-                log.error("Files.notExists {}", pathDB);
+        try {
+            String path = UtilsDB.pathDB(externalProperties);
+            for (LocalDate localDate = dto.getStartDate(); localDate.isBefore(dto.getEndDate().plusDays(1)); localDate = localDate.plusDays(1)) {
+                String year = String.valueOf(localDate.getYear()).substring(2);
+                String month = String.valueOf(localDate.getMonthValue());
+                String day = String.valueOf(localDate.getDayOfMonth());
+                String fileDB = "D" + (day.length() == 1 ? "0" : "") + day + (month.length() == 1 ? "0" : "") + month + "_" + year;
+                Path pathDB = Paths.get( path + fileDB + ".DB");
+                if (Files.exists(pathDB)) {
+                    log.info(pathDB.toString());
+                    ParadoxService.tableParadoxHandler(pathDB, timeStampService, localDate);
+                } else {
+                    log.error("Files.notExists {}", pathDB);
+                }
             }
+            return true;
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage());
+            return false;
         }
-        return true;
     }
 }

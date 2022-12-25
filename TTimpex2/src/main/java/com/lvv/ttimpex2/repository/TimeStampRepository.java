@@ -14,5 +14,6 @@ public interface TimeStampRepository {
     boolean delete(String id);
     Optional<TimeStamp> findById(String id);
     Collection<TimeStamp> getCollection();
-    Map<String, LocalTime> getFirstAndLastByDateAndEmployee(Employee employee, LocalDate localDate);
+    Map<String, LocalTime> getFirstAndLastByEmployeeAndDate(Employee employee, LocalDate localDate);
+    Optional<TimeStamp> getLastByEmployeeAndDate(Employee employee, LocalDate localDate);
 }

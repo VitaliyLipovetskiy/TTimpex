@@ -37,7 +37,7 @@
     </properties>
 
 <!--    <packaging>jar</packaging>-->
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <dependencies>
         <!--  DataBase      -->
@@ -201,7 +201,7 @@
     </dependencies>
 
     <build>
-<!--        <finalName>TTimpex</finalName>-->
+        <finalName>TTimpex</finalName>
         <plugins>
             <!-- =================================== -->
 <!--            <plugin>-->

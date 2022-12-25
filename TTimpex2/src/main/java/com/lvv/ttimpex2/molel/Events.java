@@ -1,5 +1,6 @@
 package com.lvv.ttimpex2.molel;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -19,5 +20,10 @@ public enum Events {
             if (event.id == id) return event;
         }
         throw new IllegalArgumentException();
+    }
+
+    @JsonValue
+    public int getId() {
+        return this.id;
     }
 }

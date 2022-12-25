@@ -2,12 +2,13 @@ package com.lvv.ttimpex2.repository.inmemory;
 
 import com.lvv.ttimpex2.molel.AbstractBaseEntity;
 import com.lvv.ttimpex2.molel.Department;
+import com.lvv.ttimpex2.molel.HasId;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class InMemoryBaseRepository<T extends AbstractBaseEntity> {
+public class InMemoryBaseRepository<T extends HasId> {
 
     final Map<String, T> map = new ConcurrentHashMap<>();
 

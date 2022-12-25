@@ -134,6 +134,7 @@ $(function () {
                 ],
                 order: [[groupColumn,'asc']],
                 paging: false,
+                scrollY: '50vh',
                 // deferRender: true,
                 // scrollX: true,
                 // scrollCollapse: true,

@@ -4,6 +4,7 @@ import com.lvv.ttimpex2.service.handlers.ParadoxHandler;
 import com.lvv.ttimpex2.utils.UtilsDB;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,10 +19,10 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-//@AllArgsConstructor
 @Slf4j
-//@Service
+@Service
 public final class ParadoxService {
+    private final TimeStampService timeStampService;
     private LocalDate localDate;
     private LocalTime lastExecutionTime;
     private String fileDB;
@@ -31,8 +32,9 @@ public final class ParadoxService {
     private volatile Long sleepNight;
     private final Properties externalProperties = new Properties();
 
-    public ParadoxService() {
-//        checkHandling();
+    public ParadoxService(TimeStampService timeStampService) {
+        this.timeStampService = timeStampService;
+        checkHandling();
     }
 
     public void setSleep(Long sleep) {
@@ -93,37 +95,33 @@ public final class ParadoxService {
     private void checkHandling() {
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         executorService.execute(() -> {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-                while (true) {
-                    String path = UtilsDB.pathDB(externalProperties);
-                    if (externalProperties.getProperty("app.sleep") != null) {
-                        sleep = Long.parseLong(externalProperties.getProperty("app.sleep"));
-                    }
-                    if (externalProperties.getProperty("app.night") != null) {
-                        sleepNight = Long.parseLong(externalProperties.getProperty("app.night"));
-                    }
-                    setLastExecutionTime(LocalTime.now());
-                    Path pathDB = Paths.get( path + fileDB + ".DB");
-                    log.warn("pathDB={}", pathDB);
-                    if (Files.exists(pathDB)) {
-//                        tableParadoxHandler(pathDB, new TimeStampHandler(dataJpaTimeStampOldRepository));
-                    } else {
-                        log.error("Files.notExists {}", pathDB);
-                    }
+            while (true) {
+                String path = UtilsDB.pathDB(externalProperties);
+                if (externalProperties.getProperty("app.sleep") != null) {
+                    sleep = Long.parseLong(externalProperties.getProperty("app.sleep"));
+                }
+                if (externalProperties.getProperty("app.night") != null) {
+                    sleepNight = Long.parseLong(externalProperties.getProperty("app.night"));
+                }
+                setLastExecutionTime(LocalTime.now());
+                Path pathDB = Paths.get( path + fileDB + ".DB");
+                log.warn("pathDB={}", pathDB);
+                if (Files.exists(pathDB)) {
+                    tableParadoxHandler(pathDB, timeStampService, localDate);
+                } else {
+                    log.error("Files.notExists {}", pathDB);
+                }
 //                    LOG.warn("sleep={} DateTime={} {} fileDB={} count={}",
 //                            sleep, localDate, lastExecutionTime, fileDB, dataJpaTimeStampRepository.count());
-                    try {
-                        Thread.sleep(sleep);
-                    } catch (InterruptedException e) {
-                        log.error(e.toString());
-                        e.printStackTrace();
-                    }
+                try {
+                    Thread.sleep(sleep);
+                } catch (InterruptedException e) {
+                    log.warn(e.toString());
+                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
-//            }
+            }
         });
-//        .start();
         executorService.shutdown();
     }
 

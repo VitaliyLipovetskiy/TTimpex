@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryDayOffRepository implements DayOffRepository {
@@ -39,10 +40,10 @@ public class InMemoryDayOffRepository implements DayOffRepository {
         return Optional.of(map.get(id.getEmployee().id()).get(id.getDate()));
     }
 
-    //    @Override
-//    public List<DayOff> getAll(int employeeId) {
-//        return map.get(employeeId).values().stream().toList();
-//    }
+    @Override
+    public List<DayOff> getAll() {
+        return List.of();
+    }
 
 //    @Override
 //    public List<DayOff> getBetween(LocalDate startDate, LocalDate endDate, int employeeId) {

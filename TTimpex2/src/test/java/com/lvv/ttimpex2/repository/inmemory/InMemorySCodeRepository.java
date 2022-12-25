@@ -15,13 +15,20 @@ public class InMemorySCodeRepository implements SCodeRepository {
     private final Map<String, SCode> map = new ConcurrentHashMap<>();
     private static final Logger log = LoggerFactory.getLogger(InMemorySCodeRepository.class);
 
+    public static final SCode sCode_0012 = new SCode("0012", "12345678");
+    public static final SCode sCode_0035 = new SCode("0035", "asdfghjk");
+    public static final SCode sCode_0067 = new SCode("0067", "ertyuioo");
+    public static final SCode sCode_0039 = new SCode("0039", "234ert56");
+    public static final SCode sCode_0072 = new SCode("0072", "fgh678yu");
+    public static final SCode sCode_0006 = new SCode("0006", "r5t6y7u8");
+
     public InMemorySCodeRepository() {
-        map.put("0012", new SCode("0012", "12345678"));
-        map.put("0035", new SCode("0035", "asdfghjk"));
-        map.put("0067", new SCode("0067", "ertyuioo"));
-        map.put("0039", new SCode("0039", "234ert56"));
-        map.put("0072", new SCode("0072", "fgh678yu"));
-        map.put("0006", new SCode("0006", "r5t6y7u8"));
+        map.put("0012", sCode_0012);
+        map.put("0035", sCode_0035);
+        map.put("0067", sCode_0067);
+        map.put("0039", sCode_0039);
+        map.put("0072", sCode_0072);
+        map.put("0006", sCode_0006);
     }
 
     @Override

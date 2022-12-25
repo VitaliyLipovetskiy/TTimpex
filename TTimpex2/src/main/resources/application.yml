@@ -2,9 +2,9 @@ spring:
   application:
     name: ttimpex
   datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/timestamp?currentSchema=timestamp}
-    username: ${JDBC_DATABASE_USERNAME:postgres}
-    password: ${JDBC_DATABASE_PASSWORD:password}
+    url: ${JDBC_DATABASE_URL}
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
@@ -23,7 +23,7 @@ spring:
       add-mappings: false
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 app:
   path-db: C:\TREZOR2\DATA

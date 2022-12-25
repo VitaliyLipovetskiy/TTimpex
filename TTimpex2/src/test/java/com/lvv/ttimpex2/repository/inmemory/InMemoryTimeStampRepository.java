@@ -64,7 +64,7 @@ public class InMemoryTimeStampRepository  implements TimeStampRepository {
     }
 
     @Override
-    public Map<String, LocalTime> getFirstAndLastByDateAndEmployee(Employee employee, LocalDate localDate) {
+    public Map<String, LocalTime> getFirstAndLastByEmployeeAndDate(Employee employee, LocalDate localDate) {
         Map<String, LocalTime> result = new HashMap<>();
         List<TimeStamp> timeStamps = map.values().stream()
                 .filter(timeStamp -> timeStamp.getDate().isEqual(localDate) && timeStamp.getEmployee().equals(employee))
@@ -77,5 +77,10 @@ public class InMemoryTimeStampRepository  implements TimeStampRepository {
             result.put("last", timeStamps.get(timeStamps.size() - 1).getTime());
         }
         return result;
+    }
+
+    @Override
+    public Optional<TimeStamp> getLastByEmployeeAndDate(Employee employee, LocalDate localDate) {
+        return Optional.empty();
     }
 }

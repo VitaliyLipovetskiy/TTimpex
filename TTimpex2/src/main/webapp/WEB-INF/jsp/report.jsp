@@ -80,7 +80,7 @@
                     <input type="hidden" id="id" name="id">
                     <input type="hidden" id="date" name="date">
 
-                    <div class="container">
+                    <div class="container-fluid">
                         <div class="form-group row col-sm-12">
                             <input type="text" readonly class="form-control-plaintext form-control-lg" id="title" name="title">
                         </div>

@@ -36,29 +36,14 @@ public final class TimeStamp {
     private Events event;
 
     public TimeStamp(Employee employee, LocalTime time, int post, int event) {
-        this.employee = employee;
-        this.date = LocalDate.now();
-        this.time = time;
-        this.post = post;
-        this.event = Events.getById(event);
-        this.id = employee.getId() + post + event + this.date + time;
+        this(employee.getId() + post + event + LocalDate.now() + time, employee, LocalDate.now(), time, post, Events.getById(event));
     }
 
     public TimeStamp(Employee employee, LocalDate date, LocalTime time, int post, int event) {
-        this.employee = employee;
-        this.date = date;
-        this.time = time;
-        this.post = post;
-        this.event = Events.getById(event);
-        this.id = employee.getId() + post + event + date + time;
+        this(employee.getId() + post + event + date + time, employee, date, time, post, Events.getById(event));
     }
 
     public TimeStamp(Employee employee,LocalDateTime dateTime, int post, int event) {
-        this.employee = employee;
-        this.date = dateTime.toLocalDate();
-        this.time = dateTime.toLocalTime();
-        this.post = post;
-        this.event = Events.getById(event);
-        this.id = employee.getId() + post + event + this.date + this.time;
+        this(employee.getId() + post + event + dateTime.toLocalDate() + dateTime.toLocalTime(), employee, dateTime.toLocalDate(), dateTime.toLocalTime(), post, Events.getById(event));
     }
 }

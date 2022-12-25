@@ -45,6 +45,7 @@ function initTableByData() {
                 paging: false,
                 deferRender: true,
                 scrollX: true,
+                scrollY: '50vh',
                 scrollCollapse: true,
                 fixedColumns: {
                     left: 2,

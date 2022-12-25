@@ -36,7 +36,8 @@ $(function () {
                         orderable: true
                     }
                 ],
-                paging: false
+                paging: false,
+                scrollY: '50vh'
             });
             form = $('#detailsForm');
         }

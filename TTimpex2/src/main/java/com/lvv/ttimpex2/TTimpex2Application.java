@@ -1,11 +1,9 @@
 package com.lvv.ttimpex2;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class TTimpex2Application extends SpringBootServletInitializer {
@@ -27,10 +25,5 @@ public class TTimpex2Application extends SpringBootServletInitializer {
 //        TimestampRepositoryImpl repository = ctx.getBean(TimestampRepositoryImpl.class);
 
 //        System.out.println(repository.handlingParadox("D3105_22"));
-    }
-
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
     }
 }

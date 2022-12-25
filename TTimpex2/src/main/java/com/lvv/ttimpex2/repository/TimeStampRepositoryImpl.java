@@ -39,7 +39,7 @@ public class TimeStampRepositoryImpl implements TimeStampRepository {
     }
 
     @Override
-    public Map<String, LocalTime> getFirstAndLastByDateAndEmployee(Employee employee, LocalDate localDate) {
+    public Map<String, LocalTime> getFirstAndLastByEmployeeAndDate(Employee employee, LocalDate localDate) {
         List<TimeStamp> timeStamps = timeStampRepository.findAllByEmployeeAndDateOrderByTime(employee, localDate);
         Map<String, LocalTime> result = new HashMap<>();
         if (!timeStamps.isEmpty()) {
@@ -49,5 +49,10 @@ public class TimeStampRepositoryImpl implements TimeStampRepository {
             result.put("last", timeStamps.get(timeStamps.size() - 1).getTime());
         }
         return result;
+    }
+
+    @Override
+    public Optional<TimeStamp> getLastByEmployeeAndDate(Employee employee, LocalDate localDate) {
+        return timeStampRepository.findFirstByEmployeeAndDateOrderByTimeDesc(employee, localDate);
     }
 }

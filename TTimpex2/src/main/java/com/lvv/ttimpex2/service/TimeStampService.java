@@ -15,7 +15,6 @@ import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -38,7 +37,7 @@ public class TimeStampService implements ParadoxHandler {
     public DayDto getDayTo(EmployeeDto employeeDto, LocalDate localDate, DayOffAndWorkedDto dayOffAndWorkedDto) {
         Employee employee = employeeService.getEmployeeById(UUID.fromString(employeeDto.getId()));
 //                Util.convertToEmployeeEntity(employeeDto);
-        Map<String, LocalTime> firstAndLastByDateAndEmployee = timeStampRepository.getFirstAndLastByDateAndEmployee(employee, localDate);
+        Map<String, LocalTime> firstAndLastByDateAndEmployee = timeStampRepository.getFirstAndLastByEmployeeAndDate(employee, localDate);
         TimeStampDate timeStampDate = timeStampDateRepository.get(new EmployeeDate(
                 employee,
                 dayOffAndWorkedDto.getDate()));
@@ -198,17 +197,28 @@ public class TimeStampService implements ParadoxHandler {
             if (!card.isEmpty()) {
                 employee = sCodeService.findById(card).getEmployee();
             }
-            TimeStamp timestamp = new TimeStamp(
-                    null,
-                    employee,
-                    date,
-                    resultSet.getTime("time").toLocalTime(),
-                    resultSet.getInt("post"),
-                    Events.getById(Math.abs(resultSet.getInt("event") - 1))
-            );
-            log.info("timestamp {}", timestamp);
-            saveTimeStamp(timestamp);
+            if (employee != null) {
+                int post = resultSet.getInt("post");
+                int event = resultSet.getInt("event");
+                LocalTime time = resultSet.getTime("time").toLocalTime();
+                String timestampId = employee.getId() + post + event + date + time;
+                if (timeStampRepository.findById(timestampId).isEmpty()) {
+                    TimeStamp timestamp = new TimeStamp(
+                            employee, date, time, post, event
+    //                    Math.abs(resultSet.getInt("event") - 1)
+                    );
+                    log.info("timestamp {}", timestamp);
+                    saveTimeStamp(timestamp);
+                }
+            }
         }
+    }
+
+    public TimeStamp getTimeStampByCardId(String cardId) {
+        Employee employee =  sCodeService.findById(cardId).getEmployee();
+        return timeStampRepository.getLastByEmployeeAndDate(employee, LocalDate.now()).orElseThrow(
+                () -> new ApplicationException(HttpStatus.NOT_FOUND, "Unable to find TimeStamp")
+        );
     }
 
     private Map<LocalDate, DayOffAndWorkedDto> getMapDaysOffTo(List<DayOffAndWorkedDto> daysOffTo) {

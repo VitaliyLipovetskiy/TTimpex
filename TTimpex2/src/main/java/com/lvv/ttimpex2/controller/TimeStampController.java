@@ -2,11 +2,15 @@ package com.lvv.ttimpex2.controller;
 
 import com.lvv.ttimpex2.dto.DayDto;
 import com.lvv.ttimpex2.dto.ReportDataTo;
+import com.lvv.ttimpex2.dto.TimeStampLastDto;
+import com.lvv.ttimpex2.molel.TimeStamp;
 import com.lvv.ttimpex2.service.TimeStampService;
 import com.lvv.ttimpex2.dto.old.ReportTo;
 import com.lvv.ttimpex2.dto.UpdateTimestampTo;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +30,7 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "api/ts", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TimeStampController {
     private final TimeStampService timeStampService;
+    private final ModelMapper modelMapper = new ModelMapper();
 
 //    @GetMapping
 //    public Collection[] getFiltered(@RequestParam @Nullable Map<String, LocalDate> param) {
@@ -98,4 +103,15 @@ public class TimeStampController {
         log.info("updateTimestamp {}", updateTimestampTo);
         timeStampService.update(updateTimestampTo);
     }
+
+    @GetMapping("/{cardId}")
+    public ResponseEntity<?> getTimeStampByCardId(@Parameter(description = "Card Id") @PathVariable String cardId) {
+        log.info("get timestamp  by cardId {}", cardId);
+        return ResponseEntity.ok(convertToDto(TimeStampLastDto.class, timeStampService.getTimeStampByCardId(cardId)));
+    }
+
+    private <T> T convertToDto(Class<T> clazz, TimeStamp app) {
+        return modelMapper.map(app, clazz);
+    }
+
 }

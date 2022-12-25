@@ -30,7 +30,7 @@ services:
       dockerfile: Dockerfile
     container_name: app
     ports:
-      - '8080:8080'
+      - '8088:8088'
     depends_on:
       storage:
         condition: service_healthy
@@ -41,5 +41,6 @@ services:
       - JWT_HEADER=Authorization
       - JWT_SECRET=CHANGE_ME
       - JWT_EXPIRATION=10080
+      - PORT=8088
     volumes:
       - '/etc/localtime:/etc/localtime:ro'
